@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ================= METADATA SEO UTAMA ================= -->
+    <title>konverterQR Khresmupu - Generator & Konverter QR Code Instant</title>
+    <meta name="description" content="konverterQR Khresmupu adalah aplikasi pembuat QR Code instant serba pink secara gratis untuk konversi link, teks, dan integrasi antar website dengan fitur unduh PDF rapi.">
+    <meta name="keywords" content="konverterQR Khresmupu, generator QR code, konverter QR, buat QR code pink, QR code instant, buat QR code bisnis, QR code Netlify">
+    <meta name="author" content="Khresmupu">
+    <meta name="robots" content="index, follow">
+
+    <!-- ================= FAVICON & GOOGLE SEARCH ICON ================= -->
+    <link rel="icon" type="image/png" href="KasKeuanganKhresmupu.png">
+    <link rel="apple-touch-icon" href="KasKeuanganKhresmupu.png">
+
+    <!-- ================= OPEN GRAPH / SOCIAL MEDIA (FACEBOOK, WHATSAPP, LINKEDIN) ================= -->
+    <meta property="og:title" content="konverterQR Khresmupu - Generator & Konverter QR Code Instant">
+    <meta property="og:description" content="Ubah teks atau link menjadi QR Code cantik serba pink! Dilengkapi fitur paste otomatis, integrasi URL parameter, dan cetak PDF.">
+    <meta property="og:image" content="https://kaskeuangan.wuaze.com/KasKeuanganKhresmupu.png">
+    <meta property="og:url" content="https://konverterqr-Khresmupu.netlify.app/">
+    <meta property="og:type" content="website">
+
+    <!-- ================= TWITTER CARD ================= -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="konverterQR Khresmupu - Generator & Konverter QR Code Instant">
+    <meta name="twitter:description" content="Ubah teks atau link menjadi QR Code cantik serba pink dengan instan dan praktis.">
+    <meta name="twitter:image" content="https://kaskeuangan.wuaze.com/KasKeuanganKhresmupu.png">
+
+    <!-- ================= GOOGLE FONTS ================= -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #fce4ec; /* Soft Pink Background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 10px 30px rgba(233, 30, 99, 0.15);
+            border: 2px solid #f8bbd0;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 24px;
+        }
+
+        .brand-badge {
+            background-color: #f8bbd0;
+            color: #c2185b;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            margin: 0;
+            color: #d81b60; /* Deep Pink */
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        p.subtitle {
+            color: #880e4f;
+            font-size: 12px;
+            margin-top: 6px;
+            margin-bottom: 0;
+            font-weight: 400;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #ad1457;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Input Container dengan Tombol Paste */
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 90px 12px 14px;
+            border: 2px solid #f8bbd0;
+            border-radius: 12px;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.2s ease;
+            color: #4a148c;
+            background-color: #fff8fa;
+        }
+
+        input[type="text"]:focus {
+            border-color: #e91e63;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.15);
+        }
+
+        /* Tombol Paste */
+        .btn-paste {
+            position: absolute;
+            right: 6px;
+            background-color: #ec407a;
+            color: white;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-paste:hover {
+            background-color: #d81b60;
+        }
+
+        /* Area Tampilan QR */
+        .qr-area {
+            background-color: #fff0f5;
+            border: 2px dashed #f48fb1;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .qr-area img {
+            max-width: 220px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(216, 27, 96, 0.15);
+            border: 4px solid #ffffff;
+        }
+
+        .qr-url-preview {
+            margin-top: 14px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #c2185b;
+            word-break: break-all;
+            max-width: 100%;
+        }
+
+        /* Tombol Cetak / Simpan PDF */
+        .btn-pdf {
+            width: 100%;
+            padding: 12px;
+            background-color: #e91e63;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+        }
+
+        .btn-pdf:hover {
+            background-color: #c2185b;
+            transform: translateY(-1px);
+        }
+
+        /* ==========================================================
+           TAMPILAN KHUSUS UNDUH PDF / CETAK (Hanya QR & Link Judul)
+           ========================================================== */
+        @media print {
+            body { 
+                background: none; 
+                padding: 0;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+
+            .brand-badge,
+            .subtitle,
+            .form-group,
+            .btn-pdf,
+            .btn-paste { 
+                display: none !important; 
+            }
+
+            .container { 
+                box-shadow: none; 
+                border: 2px solid #d81b60; 
+                padding: 40px;
+                width: 100%;
+                max-width: 360px;
+                border-radius: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+
+            .qr-area {
+                background: none;
+                border: none;
+                padding: 0;
+                margin-bottom: 0;
+            }
+
+            .qr-area img {
+                box-shadow: none;
+                border: 2px solid #f8bbd0;
+                width: 260px;
+                max-width: 100%;
+            }
+
+            .qr-url-preview {
+                font-size: 14px;
+                color: #000000;
+                margin-top: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Judul Website -->
+        <div class="header">
+            <span class="brand-badge">Instant QR Generator</span>
+            <h1>konverterQR Khresmupu</h1>
+            <p class="subtitle">Ubah teks atau link menjadi QR Code cantik serba pink!</p>
+        </div>
+
+        <!-- Form Input Teks & Tombol Paste -->
+        <div class="form-group">
+            <label for="input-text">Masukkan Link / Teks:</label>
+            <div class="input-wrapper">
+                <input 
+                    type="text" 
+                    id="input-text" 
+                    placeholder="Ketik atau tempel link..."
+                    oninput="generateQR()"
+                >
+                <button type="button" class="btn-paste" onclick="pasteText()">📋 Paste</button>
+            </div>
+        </div>
+
+        <!-- Wadah Output QR & Link Judul -->
+        <div class="qr-area">
+            <img id="qr-img" src="" alt="QR Code Output">
+            <div id="qr-preview" class="qr-url-preview"></div>
+        </div>
+
+        <!-- Tombol Unduh PDF / Cetak -->
+        <button class="btn-pdf" onclick="window.print()">📄 Unduh / Simpan PDF</button>
+    </div>
+
+    <script>
+        // 1. Fungsi Mengenerate QR Code
+        function generateQR() {
+            const inputVal = document.getElementById('input-text').value.trim();
+            const qrImg = document.getElementById('qr-img');
+            const qrPreview = document.getElementById('qr-preview');
+
+            if (inputVal === "") {
+                qrImg.style.display = "none";
+                qrPreview.innerText = "Masukkan teks atau URL di atas";
+            } else {
+                const apiUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(inputVal);
+                
+                qrImg.src = apiUrl;
+                qrImg.style.display = "block";
+                qrPreview.innerText = inputVal;
+            }
+        }
+
+        // 2. Fitur Tombol Paste
+        async function pasteText() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('input-text').value = text;
+                generateQR();
+            } catch (err) {
+                alert('Gagal membaca clipboard. Izinkan akses clipboard di browser Anda.');
+            }
+        }
+
+        // 3. Fitur Menerima Input dari Website Lain via Parameter URL
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const externalData = urlParams.get('data') || urlParams.get('text') || urlParams.get('link');
+
+            if (externalData) {
+                document.getElementById('input-text').value = externalData;
+            }
+            
+            generateQR();
+        });
+    </script>
+
+</body>
+</html>
