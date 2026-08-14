@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- ================= METADATA SEO UTAMA ================= -->
     <title>konverterQR Khresmupu - Generator & Konverter QR Code Instant</title>
-    <meta name="description" content="konverterQR Khresmupu adalah aplikasi pembuat QR Code instant serba pink secara gratis untuk konversi link, teks, dan integrasi antar website dengan fitur unduh PDF rapi.">
-    <meta name="keywords" content="konverterQR Khresmupu, generator QR code, konverter QR, buat QR code pink, QR code instant, buat QR code bisnis, QR code Netlify">
+    <meta name="description" content="konverterQR Khresmupu adalah aplikasi pembuat & pemindai QR Code instant serba pink secara gratis untuk konversi link, teks, scan kamera/file, dan cetak PDF.">
+    <meta name="keywords" content="konverterQR Khresmupu, generator QR code, konverter QR, scan QR code, buat QR code pink, QR code instant, buat QR code bisnis">
     <meta name="author" content="Khresmupu">
     <meta name="robots" content="index, follow">
 
@@ -15,23 +15,20 @@
     <link rel="icon" type="image/png" href="KasKeuanganKhresmupu.png">
     <link rel="apple-touch-icon" href="KasKeuanganKhresmupu.png">
 
-    <!-- ================= OPEN GRAPH / SOCIAL MEDIA (FACEBOOK, WHATSAPP, LINKEDIN) ================= -->
-    <meta property="og:title" content="konverterQR Khresmupu - Generator & Konverter QR Code Instant">
-    <meta property="og:description" content="Ubah teks atau link menjadi QR Code cantik serba pink! Dilengkapi fitur paste otomatis, integrasi URL parameter, dan cetak PDF.">
+    <!-- ================= OPEN GRAPH / SOCIAL MEDIA ================= -->
+    <meta property="og:title" content="konverterQR Khresmupu - Generator & Pemindai QR Code Instant">
+    <meta property="og:description" content="Ubah teks/link jadi QR Code cantik serba pink, unduh PNG/PDF, atau scan QR via kamera dan unggah file!">
     <meta property="og:image" content="https://kaskeuangan.wuaze.com/KasKeuanganKhresmupu.png">
     <meta property="og:url" content="https://konverterqr-Khresmupu.netlify.app/">
     <meta property="og:type" content="website">
-
-    <!-- ================= TWITTER CARD ================= -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="konverterQR Khresmupu - Generator & Konverter QR Code Instant">
-    <meta name="twitter:description" content="Ubah teks atau link menjadi QR Code cantik serba pink dengan instan dan praktis.">
-    <meta name="twitter:image" content="https://kaskeuangan.wuaze.com/KasKeuanganKhresmupu.png">
 
     <!-- ================= GOOGLE FONTS ================= -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Library Pemindai QR Code (html5-qrcode) -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
     <style>
         * {
@@ -52,16 +49,16 @@
         .container {
             background: #ffffff;
             border-radius: 20px;
-            padding: 30px;
+            padding: 25px;
             width: 100%;
-            max-width: 440px;
+            max-width: 460px;
             box-shadow: 0 10px 30px rgba(233, 30, 99, 0.15);
             border: 2px solid #f8bbd0;
             text-align: center;
         }
 
         .header {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .brand-badge {
@@ -87,9 +84,45 @@
         p.subtitle {
             color: #880e4f;
             font-size: 12px;
-            margin-top: 6px;
+            margin-top: 4px;
             margin-bottom: 0;
             font-weight: 400;
+        }
+
+        /* Navigation Tab (Buat vs Scan) */
+        .tab-container {
+            display: flex;
+            background-color: #f8bbd0;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            background: transparent;
+            color: #880e4f;
+            font-weight: 600;
+            font-size: 13px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background-color: #ffffff;
+            color: #d81b60;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .form-group {
@@ -132,7 +165,6 @@
             box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.15);
         }
 
-        /* Tombol Paste */
         .btn-paste {
             position: absolute;
             right: 6px;
@@ -159,7 +191,7 @@
             padding: 20px;
             text-align: center;
             margin-bottom: 20px;
-            min-height: 250px;
+            min-height: 240px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -167,7 +199,7 @@
         }
 
         .qr-area img {
-            max-width: 220px;
+            max-width: 200px;
             height: auto;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(216, 27, 96, 0.15);
@@ -183,29 +215,124 @@
             max-width: 100%;
         }
 
-        /* Tombol Cetak / Simpan PDF */
-        .btn-pdf {
+        /* Grid Action Buttons */
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn {
             width: 100%;
             padding: 12px;
-            background-color: #e91e63;
-            color: white;
             border: none;
             border-radius: 12px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
-        .btn-pdf:hover {
-            background-color: #c2185b;
+        .btn-png {
+            background-color: #ec407a;
+            color: white;
+        }
+
+        .btn-png:hover {
+            background-color: #d81b60;
             transform: translateY(-1px);
         }
 
-        /* ==========================================================
-           TAMPILAN KHUSUS UNDUH PDF / CETAK (Hanya QR & Link Judul)
-           ========================================================== */
+        .btn-pdf {
+            background-color: #c2185b;
+            color: white;
+        }
+
+        .btn-pdf:hover {
+            background-color: #880e4f;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: #f48fb1;
+            color: #880e4f;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f06292;
+            color: white;
+        }
+
+        /* Style Scanner QR */
+        #reader {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #f8bbd0;
+            background: #fff0f5;
+        }
+
+        #reader video {
+            border-radius: 12px;
+        }
+
+        .file-input-wrapper {
+            margin-bottom: 15px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            display: block;
+            padding: 12px;
+            background-color: #fff0f5;
+            color: #c2185b;
+            border: 2px dashed #f48fb1;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .file-label:hover {
+            background-color: #f8bbd0;
+        }
+
+        .scan-result-box {
+            margin-top: 15px;
+            padding: 12px;
+            background-color: #fff0f5;
+            border: 1px solid #f8bbd0;
+            border-radius: 12px;
+            text-align: left;
+            word-break: break-all;
+            display: none;
+        }
+
+        .scan-result-box h4 {
+            margin: 0 0 6px 0;
+            color: #ad1457;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .scan-result-box p {
+            margin: 0;
+            font-size: 13px;
+            color: #4a148c;
+            font-weight: 500;
+        }
+
+        /* CETAK PDF */
         @media print {
             body { 
                 background: none; 
@@ -219,9 +346,11 @@
 
             .brand-badge,
             .subtitle,
+            .tab-container,
             .form-group,
-            .btn-pdf,
-            .btn-paste { 
+            .button-group,
+            .btn-paste,
+            #tab-scan { 
                 display: none !important; 
             }
 
@@ -264,39 +393,85 @@
 <body>
 
     <div class="container">
-        <!-- Judul Website -->
+        <!-- Header -->
         <div class="header">
-            <span class="brand-badge">Instant QR Generator</span>
+            <span class="brand-badge">Instant QR Tools</span>
             <h1>konverterQR Khresmupu</h1>
-            <p class="subtitle">Ubah teks atau link menjadi QR Code cantik serba pink!</p>
+            <p class="subtitle">Buat, unduh, dan scan QR Code serba pink!</p>
         </div>
 
-        <!-- Form Input Teks & Tombol Paste -->
-        <div class="form-group">
-            <label for="input-text">Masukkan Link / Teks:</label>
-            <div class="input-wrapper">
-                <input 
-                    type="text" 
-                    id="input-text" 
-                    placeholder="Ketik atau tempel link..."
-                    oninput="generateQR()"
-                >
-                <button type="button" class="btn-paste" onclick="pasteText()">📋 Paste</button>
+        <!-- Tab Navigasi -->
+        <div class="tab-container">
+            <button class="tab-btn active" onclick="switchTab('generate')">✨ Buat QR</button>
+            <button class="tab-btn" onclick="switchTab('scan')">🔍 Scan QR</button>
+        </div>
+
+        <!-- TAB 1: GENERATE QR -->
+        <div id="tab-generate" class="tab-content active">
+            <div class="form-group">
+                <label for="input-text">Masukkan Link / Teks:</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="input-text" 
+                        placeholder="Ketik atau tempel link..."
+                        oninput="generateQR()"
+                    >
+                    <button type="button" class="btn-paste" onclick="pasteText()">📋 Paste</button>
+                </div>
+            </div>
+
+            <div class="qr-area">
+                <img id="qr-img" src="" alt="QR Code Output">
+                <div id="qr-preview" class="qr-url-preview"></div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-png" onclick="downloadPNG()">🖼️ Unduh PNG</button>
+                <button class="btn btn-pdf" onclick="window.print()">📄 Unduh PDF</button>
             </div>
         </div>
 
-        <!-- Wadah Output QR & Link Judul -->
-        <div class="qr-area">
-            <img id="qr-img" src="" alt="QR Code Output">
-            <div id="qr-preview" class="qr-url-preview"></div>
-        </div>
+        <!-- TAB 2: SCAN QR -->
+        <div id="tab-scan" class="tab-content">
+            <div class="file-input-wrapper">
+                <label for="qr-file-input" class="file-label">📁 Upload Gambar QR Code</label>
+                <input type="file" id="qr-file-input" accept="image/*" onchange="scanFromFile(event)">
+            </div>
 
-        <!-- Tombol Unduh PDF / Cetak -->
-        <button class="btn-pdf" onclick="window.print()">📄 Unduh / Simpan PDF</button>
+            <button id="btn-camera" class="btn btn-secondary" onclick="toggleCamera()">📷 Buka Kamera Scan</button>
+            
+            <div id="reader" style="margin-top: 15px; display: none;"></div>
+
+            <div id="scan-result" class="scan-result-box">
+                <h4>Hasil Scan:</h4>
+                <p id="scan-result-text"></p>
+                <button class="btn btn-paste" style="position: static; margin-top: 8px; width: 100%;" onclick="copyScanResult()">📋 Salin Hasil</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // 1. Fungsi Mengenerate QR Code
+        let currentQRUrl = "";
+        let html5QrCode = null;
+        let isCameraActive = false;
+
+        // 1. Fungsi Navigasi Tab
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            if (tab === 'generate') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('tab-generate').classList.add('active');
+                stopCamera();
+            } else {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('tab-scan').classList.add('active');
+            }
+        }
+
+        // 2. Generator QR Code
         function generateQR() {
             const inputVal = document.getElementById('input-text').value.trim();
             const qrImg = document.getElementById('qr-img');
@@ -305,16 +480,16 @@
             if (inputVal === "") {
                 qrImg.style.display = "none";
                 qrPreview.innerText = "Masukkan teks atau URL di atas";
+                currentQRUrl = "";
             } else {
-                const apiUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(inputVal);
-                
-                qrImg.src = apiUrl;
+                currentQRUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(inputVal);
+                qrImg.src = currentQRUrl;
                 qrImg.style.display = "block";
                 qrPreview.innerText = inputVal;
             }
         }
 
-        // 2. Fitur Tombol Paste
+        // 3. Paste Teks
         async function pasteText() {
             try {
                 const text = await navigator.clipboard.readText();
@@ -325,7 +500,105 @@
             }
         }
 
-        // 3. Fitur Menerima Input dari Website Lain via Parameter URL
+        // 4. Unduh QR Code sebagai File PNG
+        async function downloadPNG() {
+            if (!currentQRUrl) {
+                alert("Silakan masukkan teks atau link terlebih dahulu!");
+                return;
+            }
+
+            try {
+                const response = await fetch(currentQRUrl);
+                const blob = await response.blob();
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'QR_Khresmupu.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (error) {
+                alert("Gagal mengunduh gambar PNG.");
+            }
+        }
+
+        // 5. Scan QR dari File Gambar (Upload)
+        function scanFromFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!html5QrCode) {
+                html5QrCode = new Html5Qrcode("reader");
+            }
+
+            html5QrCode.scanFile(file, true)
+                .then(qrCodeMessage => {
+                    displayScanResult(qrCodeMessage);
+                })
+                .catch(err => {
+                    alert("QR Code tidak ditemukan atau tidak dapat dibaca dari gambar ini.");
+                });
+        }
+
+        // 6. Scan QR Menggunakan Kamera
+        function toggleCamera() {
+            const readerDiv = document.getElementById('reader');
+            const btnCam = document.getElementById('btn-camera');
+
+            if (isCameraActive) {
+                stopCamera();
+            } else {
+                readerDiv.style.display = "block";
+                btnCam.innerText = "🛑 Tutup Kamera";
+                isCameraActive = true;
+
+                if (!html5QrCode) {
+                    html5QrCode = new Html5Qrcode("reader");
+                }
+
+                html5QrCode.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: { width: 220, height: 220 } },
+                    (decodedText) => {
+                        displayScanResult(decodedText);
+                        stopCamera();
+                    },
+                    (errorMessage) => {
+                        // mengabaikan error scanning per-frame
+                    }
+                ).catch(err => {
+                    alert("Gagal membuka kamera. Pastikan izin kamera sudah diberikan.");
+                    stopCamera();
+                });
+            }
+        }
+
+        function stopCamera() {
+            if (html5QrCode && isCameraActive) {
+                html5QrCode.stop().then(() => {
+                    document.getElementById('reader').style.display = "none";
+                    document.getElementById('btn-camera').innerText = "📷 Buka Kamera Scan";
+                    isCameraActive = false;
+                }).catch(err => console.error(err));
+            }
+        }
+
+        // 7. Menampilkan & Salin Hasil Scan
+        function displayScanResult(text) {
+            const resultBox = document.getElementById('scan-result');
+            const resultText = document.getElementById('scan-result-text');
+            
+            resultText.innerText = text;
+            resultBox.style.display = "block";
+        }
+
+        function copyScanResult() {
+            const text = document.getElementById('scan-result-text').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Hasil scan berhasil disalin ke clipboard!");
+            });
+        }
+
+        // 8. Integrasi Parameter URL saat Load
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const externalData = urlParams.get('data') || urlParams.get('text') || urlParams.get('link');
@@ -333,10 +606,9 @@
             if (externalData) {
                 document.getElementById('input-text').value = externalData;
             }
-            
+
             generateQR();
         });
     </script>
-
 </body>
 </html>
