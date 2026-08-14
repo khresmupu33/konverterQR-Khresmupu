@@ -74,9 +74,9 @@
             border-radius: 16px;
         }
 
-        /* Header khusus ekspor DISAMBUNGKAN/DISEMBUNYIKAN di layar HP */
+        /* Header khusus ekspor DISEMBUNYIKAN di layar HP */
         .export-header {
-            display: none; /* Rahasia: Sembunyi di layar utama agar tidak double */
+            display: none; 
             margin-bottom: 15px;
         }
 
@@ -244,9 +244,9 @@
             max-width: 100%;
         }
 
-        /* Grid Action Buttons */
+        /* Grid Action Buttons (Sembunyi awal) */
         .button-group {
-            display: grid;
+            display: none; /* Baru muncul jika QR tersedia */
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
@@ -265,6 +265,7 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
+            text-decoration: none;
         }
 
         .btn-png {
@@ -359,7 +360,7 @@
 
         .scan-result-box {
             margin-top: 15px;
-            padding: 12px;
+            padding: 15px;
             background-color: #fff0f5;
             border: 1px solid #f8bbd0;
             border-radius: 12px;
@@ -376,10 +377,22 @@
         }
 
         .scan-result-box p {
-            margin: 0;
+            margin: 0 0 12px 0;
             font-size: 13px;
             color: #4a148c;
             font-weight: 500;
+        }
+
+        .scan-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .scan-actions .btn-action {
+            flex: 1;
+            padding: 8px 10px;
+            text-align: center;
         }
 
         /* CETAK PDF (PRINT MEDIA) */
@@ -394,7 +407,6 @@
                 height: 100vh;
             }
 
-            /* Sembunyikan semua tombol dan input di PDF */
             .main-title,
             .tab-container,
             .form-group,
@@ -404,7 +416,6 @@
                 display: none !important; 
             }
 
-            /* Munculkan header merk khusus untuk PDF */
             .export-header {
                 display: block !important;
             }
@@ -449,7 +460,7 @@
 <body>
 
     <div class="container">
-        <!-- Judul Utama (Satu-satunya yang kelihatan di HP/Layar) -->
+        <!-- Judul Utama -->
         <h1 class="main-title">konverterQR Khresmupu</h1>
 
         <!-- Tab Navigasi -->
@@ -477,9 +488,8 @@
                 </div>
             </div>
 
-            <!-- Elemen Kartu QR (Judul di dalamnya tersembunyi secara default) -->
+            <!-- Elemen Kartu QR -->
             <div id="qr-card-render">
-                <!-- Header khusus cetak / PNG saja -->
                 <div class="export-header">
                     <span class="brand-badge">Instant QR Tools</span>
                     <h2 class="brand-title-render">konverterQR Khresmupu</h2>
@@ -491,7 +501,8 @@
                 </div>
             </div>
 
-            <div class="button-group">
+            <!-- Tombol Baru Kelihatan Saat QR Sudah Muncul -->
+            <div id="export-buttons" class="button-group">
                 <button class="btn btn-png" onclick="downloadPNGCard()">🖼️ Unduh PNG</button>
                 <button class="btn btn-pdf" onclick="window.print()">📄 Unduh PDF</button>
             </div>
@@ -499,7 +510,8 @@
 
         <!-- TAB 2: SCAN QR -->
         <div id="tab-scan" class="tab-content">
-            <div class="file-input-wrapper">
+            <!-- Area Upload Gambar -->
+            <div id="upload-wrapper" class="file-input-wrapper">
                 <label for="qr-file-input" class="file-label">📁 Upload Gambar QR Code</label>
                 <input type="file" id="qr-file-input" accept="image/*" onchange="initCropImage(event)">
             </div>
@@ -512,14 +524,20 @@
                 <button class="btn btn-png" onclick="processCroppedImage()">✂️ Crop & Scan QR</button>
             </div>
 
+            <!-- Tombol Kamera -->
             <button id="btn-camera" class="btn btn-secondary" onclick="toggleCamera()">📷 Buka Kamera Scan</button>
             
             <div id="reader" style="margin-top: 15px; display: none;"></div>
 
+            <!-- Box Hasil Scan -->
             <div id="scan-result" class="scan-result-box">
                 <h4>Hasil Scan:</h4>
                 <p id="scan-result-text"></p>
-                <button class="btn-action" style="margin-top: 8px; width: 100%;" onclick="copyScanResult()">📋 Salin Hasil</button>
+                <div class="scan-actions">
+                    <button class="btn-action" onclick="copyScanResult()">📋 Salin</button>
+                    <a id="btn-open-url" href="#" target="_blank" class="btn-action" style="display: none; background-color: #2e7d32;">🌐 Buka Link</a>
+                    <button class="btn-action btn-reset" onclick="resetScanUI()">🔄 Reset</button>
+                </div>
             </div>
         </div>
     </div>
@@ -545,15 +563,17 @@
             }
         }
 
-        // 2. Generator QR Code
+        // 2. Generator QR Code (Kontrol Visibilitas Tombol Unduh)
         function generateQR() {
             const inputVal = document.getElementById('input-text').value.trim();
             const qrArea = document.getElementById('qr-area');
             const qrImg = document.getElementById('qr-img');
             const qrPreview = document.getElementById('qr-preview');
+            const exportBtns = document.getElementById('export-buttons');
 
             if (inputVal === "") {
                 qrArea.style.display = "none";
+                exportBtns.style.display = "none"; /* Sembunyi jika kosong */
                 qrImg.src = "";
                 qrPreview.innerText = "";
                 currentQRUrl = "";
@@ -561,6 +581,7 @@
                 currentQRUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(inputVal);
                 qrImg.src = currentQRUrl;
                 qrArea.style.display = "flex";
+                exportBtns.style.display = "grid"; /* Tampil jika ada isi */
                 qrPreview.innerText = inputVal;
             }
         }
@@ -582,17 +603,12 @@
             generateQR();
         }
 
-        // 5. Unduh PNG (Mengaktifkan header khusus secara sementara lalu merendernya)
+        // 5. Unduh PNG
         function downloadPNGCard() {
             const inputVal = document.getElementById('input-text').value.trim();
-            if (!inputVal) {
-                alert("Silakan masukkan teks atau link terlebih dahulu!");
-                return;
-            }
+            if (!inputVal) return;
 
             const cardElement = document.getElementById('qr-card-render');
-
-            // Tambahkan class sementara untuk memunculkan judul ekspor saat dirender
             cardElement.classList.add('is-exporting');
 
             html2canvas(cardElement, {
@@ -600,7 +616,6 @@
                 scale: 2,
                 backgroundColor: "#ffffff"
             }).then(canvas => {
-                // Sembunyikan kembali judul ekspor setelah selesai snapshot
                 cardElement.classList.remove('is-exporting');
 
                 const image = canvas.toDataURL("image/png");
@@ -616,7 +631,7 @@
             });
         }
 
-        // 6. Crop & Scan QR dari Upload File
+        // 6. Crop & Scan QR dari File Upload
         function initCropImage(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -653,24 +668,26 @@
 
                 html5QrCode.scanFile(croppedFile, true)
                     .then(qrCodeMessage => {
-                        displayScanResult(qrCodeMessage);
+                        displayScanResult(qrCodeMessage, 'upload');
                         document.getElementById('crop-container').style.display = 'none';
                     })
                     .catch(err => {
-                        alert("QR Code tidak dapat dibaca dari area pemotongan ini. Coba sesuaikan crop gambar.");
+                        alert("QR Code tidak terbaca. Sesuaikan area crop gambar.");
                     });
             });
         }
 
-        // 7. Scan QR Menggunakan Kamera
+        // 7. Scan QR via Kamera
         function toggleCamera() {
             const readerDiv = document.getElementById('reader');
             const btnCam = document.getElementById('btn-camera');
+            const uploadWrapper = document.getElementById('upload-wrapper');
 
             if (isCameraActive) {
                 stopCamera();
             } else {
                 document.getElementById('crop-container').style.display = 'none';
+                uploadWrapper.style.display = 'none'; /* Sembunyikan Upload saat Kamera Aktif */
                 readerDiv.style.display = "block";
                 btnCam.innerText = "🛑 Tutup Kamera";
                 isCameraActive = true;
@@ -683,15 +700,13 @@
                     { facingMode: "environment" },
                     { fps: 10, qrbox: { width: 220, height: 220 } },
                     (decodedText) => {
-                        displayScanResult(decodedText);
+                        displayScanResult(decodedText, 'camera');
                         stopCamera();
                     },
-                    (errorMessage) => {
-                        // Ignore frame error
-                    }
+                    (errorMessage) => {}
                 ).catch(err => {
-                    alert("Gagal membuka kamera. Pastikan izin kamera sudah diberikan.");
-                    stopCamera();
+                    alert("Gagal membuka kamera. Izinkan akses kamera browser Anda.");
+                    resetScanUI();
                 });
             }
         }
@@ -706,20 +721,60 @@
             }
         }
 
-        // 8. Menampilkan & Salin Hasil Scan
-        function displayScanResult(text) {
+        // 8. Menampilkan Hasil Scan (Dinamis: Upload vs Kamera)
+        function displayScanResult(text, mode) {
             const resultBox = document.getElementById('scan-result');
             const resultText = document.getElementById('scan-result-text');
-            
+            const btnOpenUrl = document.getElementById('btn-open-url');
+            const btnCamera = document.getElementById('btn-camera');
+            const uploadWrapper = document.getElementById('upload-wrapper');
+
             resultText.innerText = text;
             resultBox.style.display = "block";
+
+            // Deteksi Apakah Teks Adalah URL/Link
+            if (isValidURL(text)) {
+                let formattedUrl = text.startsWith('http://') || text.startsWith('https://') ? text : 'https://' + text;
+                btnOpenUrl.href = formattedUrl;
+                btnOpenUrl.style.display = "inline-block";
+            } else {
+                btnOpenUrl.style.display = "none";
+            }
+
+            // Atur Elemen yang Ditampilkan/Disembunyikan Berdasarkan Mode
+            if (mode === 'upload') {
+                btnCamera.style.display = 'none'; /* Hilangkan tombol kamera */
+            } else if (mode === 'camera') {
+                uploadWrapper.style.display = 'none'; /* Hilangkan tombol upload */
+            }
+        }
+
+        // Helper Memeriksa Link/URL
+        function isValidURL(string) {
+            try {
+                const url = new URL(string.startsWith('http') ? string : 'https://' + string);
+                return url.hostname.includes('.');
+            } catch (_) {
+                return false;
+            }
         }
 
         function copyScanResult() {
             const text = document.getElementById('scan-result-text').innerText;
             navigator.clipboard.writeText(text).then(() => {
-                alert("Hasil scan berhasil disalin ke clipboard!");
+                alert("Hasil scan berhasil disalin!");
             });
+        }
+
+        // Reset UI Tab Scan
+        function resetScanUI() {
+            stopCamera();
+            document.getElementById('scan-result').style.display = "none";
+            document.getElementById('crop-container').style.display = "none";
+            document.getElementById('upload-wrapper').style.display = "block";
+            document.getElementById('btn-camera').style.display = "flex";
+            document.getElementById('qr-file-input').value = "";
+            if (cropper) cropper.destroy();
         }
 
         // 9. Integrasi Parameter URL saat Load
