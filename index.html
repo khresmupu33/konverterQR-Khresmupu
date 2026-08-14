@@ -60,6 +60,14 @@
             text-align: center;
         }
 
+        /* Judul Utama di Luar Card */
+        .main-title {
+            margin: 0 0 15px 0;
+            color: #d81b60; /* Deep Pink */
+            font-size: 24px;
+            font-weight: 700;
+        }
+
         /* Area Card yang akan di-render saat Unduh PNG / PDF */
         #qr-card-render {
             background: #ffffff;
@@ -68,7 +76,7 @@
         }
 
         .header {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .brand-badge {
@@ -84,19 +92,11 @@
             letter-spacing: 1px;
         }
 
-        h1 {
+        .brand-title-render {
             margin: 0;
-            color: #d81b60; /* Deep Pink */
-            font-size: 22px;
+            color: #d81b60;
+            font-size: 20px;
             font-weight: 700;
-        }
-
-        p.subtitle {
-            color: #880e4f;
-            font-size: 12px;
-            margin-top: 4px;
-            margin-bottom: 0;
-            font-weight: 400;
         }
 
         /* Navigation Tab (Buat vs Scan) */
@@ -206,7 +206,7 @@
             background-color: #880e4f;
         }
 
-        /* Area Tampilan QR */
+        /* Area Tampilan QR (Sembunyi secara default) */
         .qr-area {
             background-color: #fff0f5;
             border: 2px dashed #f48fb1;
@@ -215,7 +215,7 @@
             text-align: center;
             margin-bottom: 20px;
             min-height: 240px;
-            display: flex;
+            display: none; /* Disembunyikan saat kosong */
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -388,8 +388,8 @@
                 height: 100vh;
             }
 
+            .main-title,
             .brand-badge,
-            .subtitle,
             .tab-container,
             .form-group,
             .button-group,
@@ -407,7 +407,7 @@
                 border-radius: 20px;
             }
 
-            h1 {
+            .brand-title-render {
                 font-size: 24px;
                 margin-bottom: 20px;
             }
@@ -417,6 +417,7 @@
                 border: none;
                 padding: 0;
                 margin-bottom: 0;
+                display: flex !important;
             }
 
             .qr-area img {
@@ -437,6 +438,9 @@
 <body>
 
     <div class="container">
+        <!-- Judul Paling Atas di Luar Card -->
+        <h1 class="main-title">konverterQR Khresmupu</h1>
+
         <!-- Tab Navigasi -->
         <div class="tab-container">
             <button class="tab-btn active" onclick="switchTab('generate')">✨ Buat QR</button>
@@ -466,11 +470,10 @@
             <div id="qr-card-render">
                 <div class="header">
                     <span class="brand-badge">Instant QR Tools</span>
-                    <h1>konverterQR Khresmupu</h1>
-                    
+                    <h2 class="brand-title-render">konverterQR Khresmupu</h2>
                 </div>
 
-                <div class="qr-area">
+                <div id="qr-area" class="qr-area">
                     <img id="qr-img" src="" crossorigin="anonymous" alt="QR Code Output">
                     <div id="qr-preview" class="qr-url-preview"></div>
                 </div>
@@ -530,20 +533,22 @@
             }
         }
 
-        // 2. Generator QR Code
+        // 2. Generator QR Code (Kontrol Tampilan Kotak QR)
         function generateQR() {
             const inputVal = document.getElementById('input-text').value.trim();
+            const qrArea = document.getElementById('qr-area');
             const qrImg = document.getElementById('qr-img');
             const qrPreview = document.getElementById('qr-preview');
 
             if (inputVal === "") {
-                qrImg.style.display = "none";
-                qrPreview.innerText = "Masukkan teks atau URL di atas";
+                qrArea.style.display = "none";
+                qrImg.src = "";
+                qrPreview.innerText = "";
                 currentQRUrl = "";
             } else {
                 currentQRUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(inputVal);
                 qrImg.src = currentQRUrl;
-                qrImg.style.display = "block";
+                qrArea.style.display = "flex";
                 qrPreview.innerText = inputVal;
             }
         }
