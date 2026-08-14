@@ -212,7 +212,7 @@
             background-color: #880e4f;
         }
 
-        /* Area Tampilan QR (Sembunyi secara default saat kosong) */
+        /* Area Tampilan QR */
         .qr-area {
             background-color: #fff0f5;
             border: 2px dashed #f48fb1;
@@ -246,7 +246,7 @@
 
         /* Grid Action Buttons (Sembunyi awal) */
         .button-group {
-            display: none; /* Baru muncul jika QR tersedia */
+            display: none; 
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
@@ -563,7 +563,7 @@
             }
         }
 
-        // 2. Generator QR Code (Kontrol Visibilitas Tombol Unduh)
+        // 2. Generator QR Code
         function generateQR() {
             const inputVal = document.getElementById('input-text').value.trim();
             const qrArea = document.getElementById('qr-area');
@@ -573,7 +573,7 @@
 
             if (inputVal === "") {
                 qrArea.style.display = "none";
-                exportBtns.style.display = "none"; /* Sembunyi jika kosong */
+                exportBtns.style.display = "none";
                 qrImg.src = "";
                 qrPreview.innerText = "";
                 currentQRUrl = "";
@@ -581,7 +581,7 @@
                 currentQRUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(inputVal);
                 qrImg.src = currentQRUrl;
                 qrArea.style.display = "flex";
-                exportBtns.style.display = "grid"; /* Tampil jika ada isi */
+                exportBtns.style.display = "grid";
                 qrPreview.innerText = inputVal;
             }
         }
@@ -603,7 +603,36 @@
             generateQR();
         }
 
-        // 5. Unduh PNG
+        // 5. Fungsi Generator Nama File (Link/Teks + Tanggal + Jam)
+        function generateFileName(input) {
+            // Bersihkan 'https://' atau 'http://' atau 'http:' dari depan
+            let cleanText = input.replace(/^https?:\/\//i, '').replace(/^http:\/\//i, '');
+
+            // Bersihkan karakter ilegal yang dilarang untuk nama file komputer/HP
+            cleanText = cleanText.replace(/[\/\\?%*:|"<>]/g, '-').trim();
+
+            // Batasi panjang nama teks jika terlalu panjang
+            if (cleanText.length > 30) {
+                cleanText = cleanText.substring(0, 30);
+            }
+
+            // Dapatkan Tanggal & Jam saat ini
+            const now = new Date();
+            const dd = String(now.getDate()).padStart(2, '0');
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const yyyy = now.getFullYear();
+
+            const hh = String(now.getHours()).padStart(2, '0');
+            const min = String(now.getMinutes()).padStart(2, '0');
+            const ss = String(now.getSeconds()).padStart(2, '0');
+
+            const timestamp = `${dd}-${mm}-${yyyy}_${hh}-${min}-${ss}`;
+
+            // Gabungkan Nama Teks + Timestamp
+            return `${cleanText || 'QR_Code'}_${timestamp}.png`;
+        }
+
+        // 6. Unduh PNG dengan Nama File Otomatis
         function downloadPNGCard() {
             const inputVal = document.getElementById('input-text').value.trim();
             if (!inputVal) return;
@@ -619,9 +648,11 @@
                 cardElement.classList.remove('is-exporting');
 
                 const image = canvas.toDataURL("image/png");
+                const fileName = generateFileName(inputVal); // Panggil nama file dinamis
+
                 const link = document.createElement('a');
                 link.href = image;
-                link.download = 'Kartu_QR_Khresmupu.png';
+                link.download = fileName;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -631,7 +662,7 @@
             });
         }
 
-        // 6. Crop & Scan QR dari File Upload
+        // 7. Crop & Scan QR dari File Upload
         function initCropImage(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -677,7 +708,7 @@
             });
         }
 
-        // 7. Scan QR via Kamera
+        // 8. Scan QR via Kamera
         function toggleCamera() {
             const readerDiv = document.getElementById('reader');
             const btnCam = document.getElementById('btn-camera');
@@ -687,7 +718,7 @@
                 stopCamera();
             } else {
                 document.getElementById('crop-container').style.display = 'none';
-                uploadWrapper.style.display = 'none'; /* Sembunyikan Upload saat Kamera Aktif */
+                uploadWrapper.style.display = 'none';
                 readerDiv.style.display = "block";
                 btnCam.innerText = "🛑 Tutup Kamera";
                 isCameraActive = true;
@@ -721,7 +752,7 @@
             }
         }
 
-        // 8. Menampilkan Hasil Scan (Dinamis: Upload vs Kamera)
+        // 9. Menampilkan Hasil Scan
         function displayScanResult(text, mode) {
             const resultBox = document.getElementById('scan-result');
             const resultText = document.getElementById('scan-result-text');
@@ -732,7 +763,6 @@
             resultText.innerText = text;
             resultBox.style.display = "block";
 
-            // Deteksi Apakah Teks Adalah URL/Link
             if (isValidURL(text)) {
                 let formattedUrl = text.startsWith('http://') || text.startsWith('https://') ? text : 'https://' + text;
                 btnOpenUrl.href = formattedUrl;
@@ -741,15 +771,13 @@
                 btnOpenUrl.style.display = "none";
             }
 
-            // Atur Elemen yang Ditampilkan/Disembunyikan Berdasarkan Mode
             if (mode === 'upload') {
-                btnCamera.style.display = 'none'; /* Hilangkan tombol kamera */
+                btnCamera.style.display = 'none';
             } else if (mode === 'camera') {
-                uploadWrapper.style.display = 'none'; /* Hilangkan tombol upload */
+                uploadWrapper.style.display = 'none';
             }
         }
 
-        // Helper Memeriksa Link/URL
         function isValidURL(string) {
             try {
                 const url = new URL(string.startsWith('http') ? string : 'https://' + string);
@@ -766,7 +794,6 @@
             });
         }
 
-        // Reset UI Tab Scan
         function resetScanUI() {
             stopCamera();
             document.getElementById('scan-result').style.display = "none";
@@ -777,7 +804,7 @@
             if (cropper) cropper.destroy();
         }
 
-        // 9. Integrasi Parameter URL saat Load
+        // 10. Integrasi Parameter URL saat Load
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const externalData = urlParams.get('data') || urlParams.get('text') || urlParams.get('link');
