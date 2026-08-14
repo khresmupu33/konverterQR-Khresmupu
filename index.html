@@ -407,6 +407,8 @@
                 height: 100vh;
             }
 
+            /* .container > .brand-badge ditambahkan agar badge paling atas tidak ikut tercetak */
+            .container > .brand-badge,
             .main-title,
             .tab-container,
             .form-group,
@@ -461,7 +463,7 @@
 
     <div class="container">
         <!-- Judul Utama -->
-                            <span class="brand-badge">Instant QR Tools</span>
+        <span class="brand-badge">Instant QR Tools</span>
         <h1 class="main-title">konverterQR Khresmupu</h1>
 
         <!-- Tab Navigasi -->
@@ -606,18 +608,13 @@
 
         // 5. Fungsi Generator Nama File (Link/Teks + Tanggal + Jam)
         function generateFileName(input) {
-            // Bersihkan 'https://' atau 'http://' atau 'http:' dari depan
             let cleanText = input.replace(/^https?:\/\//i, '').replace(/^http:\/\//i, '');
-
-            // Bersihkan karakter ilegal yang dilarang untuk nama file komputer/HP
             cleanText = cleanText.replace(/[\/\\?%*:|"<>]/g, '-').trim();
 
-            // Batasi panjang nama teks jika terlalu panjang
             if (cleanText.length > 30) {
                 cleanText = cleanText.substring(0, 30);
             }
 
-            // Dapatkan Tanggal & Jam saat ini
             const now = new Date();
             const dd = String(now.getDate()).padStart(2, '0');
             const mm = String(now.getMonth() + 1).padStart(2, '0');
@@ -629,7 +626,6 @@
 
             const timestamp = `${dd}-${mm}-${yyyy}_${hh}-${min}-${ss}`;
 
-            // Gabungkan Nama Teks + Timestamp
             return `${cleanText || 'QR_Code'}_${timestamp}.png`;
         }
 
@@ -649,7 +645,7 @@
                 cardElement.classList.remove('is-exporting');
 
                 const image = canvas.toDataURL("image/png");
-                const fileName = generateFileName(inputVal); // Panggil nama file dinamis
+                const fileName = generateFileName(inputVal);
 
                 const link = document.createElement('a');
                 link.href = image;
