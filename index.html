@@ -6,7 +6,7 @@
 
     <!-- ================= METADATA SEO UTAMA ================= -->
     <title>konverterQR Khresmupu - Generator & Konverter QR Code Instant</title>
-    <meta name="description" content="konverterQR Khresmupu adalah aplikasi pembuat & pemindai QR Code instant serba pink secara gratis untuk konversi link, teks, scan kamera/file, dan cetak PDF.">
+    <meta name="description" content="konverterQR Khresmupu adalah aplikasi pembuat & pemindai QR Code instant serba pink secara gratis untuk konversi link, teks, scan kamera/file, dan cetak PDF/PNG.">
     <meta name="keywords" content="konverterQR Khresmupu, generator QR code, konverter QR, scan QR code, buat QR code pink, QR code instant, buat QR code bisnis">
     <meta name="author" content="Khresmupu">
     <meta name="robots" content="index, follow">
@@ -27,8 +27,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Library Pemindai QR Code (html5-qrcode) -->
+    <!-- Library Pemindai QR Code (html5-qrcode) & HTML to Canvas (Unduh PNG Card) -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
         * {
@@ -55,6 +56,13 @@
             box-shadow: 0 10px 30px rgba(233, 30, 99, 0.15);
             border: 2px solid #f8bbd0;
             text-align: center;
+        }
+
+        /* Area Card yang akan di-render saat Unduh PNG / PDF */
+        #qr-card-render {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 16px;
         }
 
         .header {
@@ -393,13 +401,6 @@
 <body>
 
     <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <span class="brand-badge">Instant QR Tools</span>
-            <h1>konverterQR Khresmupu</h1>
-            <p class="subtitle">Buat, unduh, dan scan QR Code serba pink!</p>
-        </div>
-
         <!-- Tab Navigasi -->
         <div class="tab-container">
             <button class="tab-btn active" onclick="switchTab('generate')">✨ Buat QR</button>
@@ -408,6 +409,7 @@
 
         <!-- TAB 1: GENERATE QR -->
         <div id="tab-generate" class="tab-content active">
+            <!-- Form Input -->
             <div class="form-group">
                 <label for="input-text">Masukkan Link / Teks:</label>
                 <div class="input-wrapper">
@@ -421,13 +423,22 @@
                 </div>
             </div>
 
-            <div class="qr-area">
-                <img id="qr-img" src="" alt="QR Code Output">
-                <div id="qr-preview" class="qr-url-preview"></div>
+            <!-- Elemen Kartu QR yang akan dirender ke Gambar PNG & PDF -->
+            <div id="qr-card-render">
+                <div class="header">
+                    <span class="brand-badge">Instant QR Tools</span>
+                    <h1>konverterQR Khresmupu</h1>
+                    <p class="subtitle">Buat, unduh, dan scan QR Code serba pink!</p>
+                </div>
+
+                <div class="qr-area">
+                    <img id="qr-img" src="" crossorigin="anonymous" alt="QR Code Output">
+                    <div id="qr-preview" class="qr-url-preview"></div>
+                </div>
             </div>
 
             <div class="button-group">
-                <button class="btn btn-png" onclick="downloadPNG()">🖼️ Unduh PNG</button>
+                <button class="btn btn-png" onclick="downloadPNGCard()">🖼️ Unduh PNG</button>
                 <button class="btn btn-pdf" onclick="window.print()">📄 Unduh PDF</button>
             </div>
         </div>
@@ -482,6 +493,7 @@
                 qrPreview.innerText = "Masukkan teks atau URL di atas";
                 currentQRUrl = "";
             } else {
+                // Menggunakan API QR dengan penanganan Cross-Origin agar html2canvas bisa mengunduhnya
                 currentQRUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(inputVal);
                 qrImg.src = currentQRUrl;
                 qrImg.style.display = "block";
@@ -500,25 +512,31 @@
             }
         }
 
-        // 4. Unduh QR Code sebagai File PNG
-        async function downloadPNG() {
-            if (!currentQRUrl) {
+        // 4. Unduh Seluruh Kartu QR Tampilan PDF Sebagai Gambar PNG
+        function downloadPNGCard() {
+            const inputVal = document.getElementById('input-text').value.trim();
+            if (!inputVal) {
                 alert("Silakan masukkan teks atau link terlebih dahulu!");
                 return;
             }
 
-            try {
-                const response = await fetch(currentQRUrl);
-                const blob = await response.blob();
+            const cardElement = document.getElementById('qr-card-render');
+
+            html2canvas(cardElement, {
+                useCORS: true,
+                scale: 2, // Meningkatkan resolusi/ketajaman gambar
+                backgroundColor: "#ffffff"
+            }).then(canvas => {
+                const image = canvas.toDataURL("image/png");
                 const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = 'QR_Khresmupu.png';
+                link.href = image;
+                link.download = 'Kartu_QR_Khresmupu.png';
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-            } catch (error) {
-                alert("Gagal mengunduh gambar PNG.");
-            }
+            }).catch(err => {
+                alert("Gagal mengunduh gambar kartu PNG.");
+            });
         }
 
         // 5. Scan QR dari File Gambar (Upload)
@@ -563,7 +581,7 @@
                         stopCamera();
                     },
                     (errorMessage) => {
-                        // mengabaikan error scanning per-frame
+                        // Mengabaikan error per frame
                     }
                 ).catch(err => {
                     alert("Gagal membuka kamera. Pastikan izin kamera sudah diberikan.");
