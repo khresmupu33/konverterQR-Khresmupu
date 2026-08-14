@@ -60,7 +60,7 @@
             text-align: center;
         }
 
-        /* Judul Utama di Luar Card */
+        /* Judul Utama yang Tampil di Layar Aplikasi */
         .main-title {
             margin: 0 0 15px 0;
             color: #d81b60; /* Deep Pink */
@@ -68,15 +68,21 @@
             font-weight: 700;
         }
 
-        /* Area Card yang akan di-render saat Unduh PNG / PDF */
+        /* Tampilan khusus Kartu Ekspor (Judul Dalam) */
         #qr-card-render {
             background: #ffffff;
-            padding: 15px;
             border-radius: 16px;
         }
 
-        .header {
+        /* Header khusus ekspor DISAMBUNGKAN/DISEMBUNYIKAN di layar HP */
+        .export-header {
+            display: none; /* Rahasia: Sembunyi di layar utama agar tidak double */
             margin-bottom: 15px;
+        }
+
+        /* Gaya Header saat diekspor ke PNG */
+        .is-exporting .export-header {
+            display: block !important;
         }
 
         .brand-badge {
@@ -206,7 +212,7 @@
             background-color: #880e4f;
         }
 
-        /* Area Tampilan QR (Sembunyi secara default) */
+        /* Area Tampilan QR (Sembunyi secara default saat kosong) */
         .qr-area {
             background-color: #fff0f5;
             border: 2px dashed #f48fb1;
@@ -215,7 +221,7 @@
             text-align: center;
             margin-bottom: 20px;
             min-height: 240px;
-            display: none; /* Disembunyikan saat kosong */
+            display: none; 
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -376,7 +382,7 @@
             font-weight: 500;
         }
 
-        /* CETAK PDF */
+        /* CETAK PDF (PRINT MEDIA) */
         @media print {
             body { 
                 background: none; 
@@ -388,8 +394,8 @@
                 height: 100vh;
             }
 
+            /* Sembunyikan semua tombol dan input di PDF */
             .main-title,
-            .brand-badge,
             .tab-container,
             .form-group,
             .button-group,
@@ -398,18 +404,23 @@
                 display: none !important; 
             }
 
+            /* Munculkan header merk khusus untuk PDF */
+            .export-header {
+                display: block !important;
+            }
+
             .container { 
                 box-shadow: none; 
                 border: 2px solid #d81b60; 
-                padding: 40px;
+                padding: 30px;
                 width: 100%;
                 max-width: 360px;
                 border-radius: 20px;
             }
 
             .brand-title-render {
-                font-size: 24px;
-                margin-bottom: 20px;
+                font-size: 22px;
+                margin-bottom: 15px;
             }
 
             .qr-area {
@@ -438,7 +449,7 @@
 <body>
 
     <div class="container">
-        <!-- Judul Paling Atas di Luar Card -->
+        <!-- Judul Utama (Satu-satunya yang kelihatan di HP/Layar) -->
         <h1 class="main-title">konverterQR Khresmupu</h1>
 
         <!-- Tab Navigasi -->
@@ -466,9 +477,10 @@
                 </div>
             </div>
 
-            <!-- Elemen Kartu QR yang akan dirender ke Gambar PNG & PDF -->
+            <!-- Elemen Kartu QR (Judul di dalamnya tersembunyi secara default) -->
             <div id="qr-card-render">
-                <div class="header">
+                <!-- Header khusus cetak / PNG saja -->
+                <div class="export-header">
                     <span class="brand-badge">Instant QR Tools</span>
                     <h2 class="brand-title-render">konverterQR Khresmupu</h2>
                 </div>
@@ -533,7 +545,7 @@
             }
         }
 
-        // 2. Generator QR Code (Kontrol Tampilan Kotak QR)
+        // 2. Generator QR Code
         function generateQR() {
             const inputVal = document.getElementById('input-text').value.trim();
             const qrArea = document.getElementById('qr-area');
@@ -570,7 +582,7 @@
             generateQR();
         }
 
-        // 5. Unduh Seluruh Kartu QR Tampilan PDF Sebagai Gambar PNG
+        // 5. Unduh PNG (Mengaktifkan header khusus secara sementara lalu merendernya)
         function downloadPNGCard() {
             const inputVal = document.getElementById('input-text').value.trim();
             if (!inputVal) {
@@ -580,11 +592,17 @@
 
             const cardElement = document.getElementById('qr-card-render');
 
+            // Tambahkan class sementara untuk memunculkan judul ekspor saat dirender
+            cardElement.classList.add('is-exporting');
+
             html2canvas(cardElement, {
                 useCORS: true,
                 scale: 2,
                 backgroundColor: "#ffffff"
             }).then(canvas => {
+                // Sembunyikan kembali judul ekspor setelah selesai snapshot
+                cardElement.classList.remove('is-exporting');
+
                 const image = canvas.toDataURL("image/png");
                 const link = document.createElement('a');
                 link.href = image;
@@ -593,6 +611,7 @@
                 link.click();
                 document.body.removeChild(link);
             }).catch(err => {
+                cardElement.classList.remove('is-exporting');
                 alert("Gagal mengunduh gambar kartu PNG.");
             });
         }
@@ -668,7 +687,7 @@
                         stopCamera();
                     },
                     (errorMessage) => {
-                        // Mengabaikan error per frame
+                        // Ignore frame error
                     }
                 ).catch(err => {
                     alert("Gagal membuka kamera. Pastikan izin kamera sudah diberikan.");
