@@ -27,9 +27,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Library Pemindai QR Code (html5-qrcode) & HTML to Canvas (Unduh PNG Card) -->
+    <!-- External Libraries: html5-qrcode, html2canvas, Cropper.js -->
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
     <style>
         * {
@@ -148,7 +150,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* Input Container dengan Tombol Paste */
+        /* Input Container dengan Tombol Action */
         .input-wrapper {
             position: relative;
             display: flex;
@@ -157,7 +159,7 @@
 
         input[type="text"] {
             width: 100%;
-            padding: 12px 90px 12px 14px;
+            padding: 12px 145px 12px 14px;
             border: 2px solid #f8bbd0;
             border-radius: 12px;
             font-size: 13px;
@@ -173,22 +175,35 @@
             box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.15);
         }
 
-        .btn-paste {
+        .input-actions {
             position: absolute;
             right: 6px;
+            display: flex;
+            gap: 4px;
+        }
+
+        .btn-action {
             background-color: #ec407a;
             color: white;
             border: none;
-            padding: 7px 12px;
+            padding: 7px 10px;
             border-radius: 8px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             cursor: pointer;
             transition: background 0.2s;
         }
 
-        .btn-paste:hover {
+        .btn-action:hover {
             background-color: #d81b60;
+        }
+
+        .btn-reset {
+            background-color: #ad1457;
+        }
+
+        .btn-reset:hover {
+            background-color: #880e4f;
         }
 
         /* Area Tampilan QR */
@@ -277,7 +292,7 @@
             color: white;
         }
 
-        /* Style Scanner QR */
+        /* Style Scanner QR & Crop Box */
         #reader {
             width: 100%;
             border-radius: 12px;
@@ -313,6 +328,27 @@
 
         .file-label:hover {
             background-color: #f8bbd0;
+        }
+
+        /* Area Cropper */
+        .crop-container {
+            display: none;
+            margin-top: 15px;
+            background: #fff0f5;
+            padding: 10px;
+            border-radius: 12px;
+            border: 2px dashed #f48fb1;
+        }
+
+        .crop-img-wrapper {
+            max-height: 300px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .crop-img-wrapper img {
+            max-width: 100%;
+            display: block;
         }
 
         .scan-result-box {
@@ -357,7 +393,7 @@
             .tab-container,
             .form-group,
             .button-group,
-            .btn-paste,
+            .input-actions,
             #tab-scan { 
                 display: none !important; 
             }
@@ -419,7 +455,10 @@
                         placeholder="Ketik atau tempel link..."
                         oninput="generateQR()"
                     >
-                    <button type="button" class="btn-paste" onclick="pasteText()">📋 Paste</button>
+                    <div class="input-actions">
+                        <button type="button" class="btn-action" onclick="pasteText()">📋 Paste</button>
+                        <button type="button" class="btn-action btn-reset" onclick="resetForm()">🔄 Reset</button>
+                    </div>
                 </div>
             </div>
 
@@ -447,7 +486,15 @@
         <div id="tab-scan" class="tab-content">
             <div class="file-input-wrapper">
                 <label for="qr-file-input" class="file-label">📁 Upload Gambar QR Code</label>
-                <input type="file" id="qr-file-input" accept="image/*" onchange="scanFromFile(event)">
+                <input type="file" id="qr-file-input" accept="image/*" onchange="initCropImage(event)">
+            </div>
+
+            <!-- Box Crop Gambar -->
+            <div id="crop-container" class="crop-container">
+                <div class="crop-img-wrapper">
+                    <img id="image-to-crop" src="" alt="Gambar untuk Crop">
+                </div>
+                <button class="btn btn-png" onclick="processCroppedImage()">✂️ Crop & Scan QR</button>
             </div>
 
             <button id="btn-camera" class="btn btn-secondary" onclick="toggleCamera()">📷 Buka Kamera Scan</button>
@@ -457,7 +504,7 @@
             <div id="scan-result" class="scan-result-box">
                 <h4>Hasil Scan:</h4>
                 <p id="scan-result-text"></p>
-                <button class="btn btn-paste" style="position: static; margin-top: 8px; width: 100%;" onclick="copyScanResult()">📋 Salin Hasil</button>
+                <button class="btn-action" style="margin-top: 8px; width: 100%;" onclick="copyScanResult()">📋 Salin Hasil</button>
             </div>
         </div>
     </div>
@@ -466,6 +513,7 @@
         let currentQRUrl = "";
         let html5QrCode = null;
         let isCameraActive = false;
+        let cropper = null;
 
         // 1. Fungsi Navigasi Tab
         function switchTab(tab) {
@@ -493,7 +541,6 @@
                 qrPreview.innerText = "Masukkan teks atau URL di atas";
                 currentQRUrl = "";
             } else {
-                // Menggunakan API QR dengan penanganan Cross-Origin agar html2canvas bisa mengunduhnya
                 currentQRUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=" + encodeURIComponent(inputVal);
                 qrImg.src = currentQRUrl;
                 qrImg.style.display = "block";
@@ -512,7 +559,13 @@
             }
         }
 
-        // 4. Unduh Seluruh Kartu QR Tampilan PDF Sebagai Gambar PNG
+        // 4. Reset Form Input & QR
+        function resetForm() {
+            document.getElementById('input-text').value = "";
+            generateQR();
+        }
+
+        // 5. Unduh Seluruh Kartu QR Tampilan PDF Sebagai Gambar PNG
         function downloadPNGCard() {
             const inputVal = document.getElementById('input-text').value.trim();
             if (!inputVal) {
@@ -524,7 +577,7 @@
 
             html2canvas(cardElement, {
                 useCORS: true,
-                scale: 2, // Meningkatkan resolusi/ketajaman gambar
+                scale: 2,
                 backgroundColor: "#ffffff"
             }).then(canvas => {
                 const image = canvas.toDataURL("image/png");
@@ -539,25 +592,53 @@
             });
         }
 
-        // 5. Scan QR dari File Gambar (Upload)
-        function scanFromFile(event) {
+        // 6. Crop & Scan QR dari Upload File
+        function initCropImage(event) {
             const file = event.target.files[0];
             if (!file) return;
 
-            if (!html5QrCode) {
-                html5QrCode = new Html5Qrcode("reader");
-            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const cropImg = document.getElementById('image-to-crop');
+                cropImg.src = e.target.result;
+                document.getElementById('crop-container').style.display = 'block';
 
-            html5QrCode.scanFile(file, true)
-                .then(qrCodeMessage => {
-                    displayScanResult(qrCodeMessage);
-                })
-                .catch(err => {
-                    alert("QR Code tidak ditemukan atau tidak dapat dibaca dari gambar ini.");
+                if (cropper) {
+                    cropper.destroy();
+                }
+
+                cropper = new Cropper(cropImg, {
+                    viewMode: 1,
+                    autoCropArea: 0.8,
+                    responsive: true
                 });
+            };
+            reader.readAsDataURL(file);
         }
 
-        // 6. Scan QR Menggunakan Kamera
+        function processCroppedImage() {
+            if (!cropper) return;
+
+            const canvas = cropper.getCroppedCanvas();
+            canvas.toBlob((blob) => {
+                const croppedFile = new File([blob], "cropped_qr.png", { type: "image/png" });
+
+                if (!html5QrCode) {
+                    html5QrCode = new Html5Qrcode("reader");
+                }
+
+                html5QrCode.scanFile(croppedFile, true)
+                    .then(qrCodeMessage => {
+                        displayScanResult(qrCodeMessage);
+                        document.getElementById('crop-container').style.display = 'none';
+                    })
+                    .catch(err => {
+                        alert("QR Code tidak dapat dibaca dari area pemotongan ini. Coba sesuaikan crop gambar.");
+                    });
+            });
+        }
+
+        // 7. Scan QR Menggunakan Kamera
         function toggleCamera() {
             const readerDiv = document.getElementById('reader');
             const btnCam = document.getElementById('btn-camera');
@@ -565,6 +646,7 @@
             if (isCameraActive) {
                 stopCamera();
             } else {
+                document.getElementById('crop-container').style.display = 'none';
                 readerDiv.style.display = "block";
                 btnCam.innerText = "🛑 Tutup Kamera";
                 isCameraActive = true;
@@ -600,7 +682,7 @@
             }
         }
 
-        // 7. Menampilkan & Salin Hasil Scan
+        // 8. Menampilkan & Salin Hasil Scan
         function displayScanResult(text) {
             const resultBox = document.getElementById('scan-result');
             const resultText = document.getElementById('scan-result-text');
@@ -616,7 +698,7 @@
             });
         }
 
-        // 8. Integrasi Parameter URL saat Load
+        // 9. Integrasi Parameter URL saat Load
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const externalData = urlParams.get('data') || urlParams.get('text') || urlParams.get('link');
