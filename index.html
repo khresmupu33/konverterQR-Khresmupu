@@ -141,16 +141,16 @@
 
         /* Form Elements */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             text-align: left;
         }
 
         label {
             display: block;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             color: var(--primary-hover);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -163,7 +163,7 @@
 
         input[type="text"] {
             width: 100%;
-            padding: 12px 145px 12px 14px;
+            padding: 10px 14px;
             border: 2px solid var(--border-color);
             border-radius: 12px;
             font-size: 13px;
@@ -171,6 +171,10 @@
             transition: all 0.2s ease;
             color: var(--text-dark);
             background-color: #fff8fa;
+        }
+
+        #input-text {
+            padding-right: 145px;
         }
 
         input[type="text"]:focus {
@@ -210,37 +214,72 @@
             background-color: var(--text-muted);
         }
 
-        /* QR Display Area */
+        /* Accordion Kustomisasi Tampilan */
+        .customize-toggle {
+            background-color: var(--accent-bg);
+            color: var(--primary);
+            border: 1px dashed var(--secondary);
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 15px;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .customize-panel {
+            display: none;
+            background: var(--accent-bg);
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .customize-panel.show {
+            display: block;
+        }
+
+        /* QR Display Area / Card Render */
         #qr-card-render {
             background: var(--card-bg);
             border-radius: 16px;
-        }
-
-        .export-header {
+            padding: 15px;
+            border: 2px dashed #f48fb1;
+            margin-bottom: 20px;
             display: none;
-            margin-bottom: 15px;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .is-exporting .export-header {
-            display: block !important;
+        .card-header-render {
+            margin-bottom: 12px;
         }
 
-        .brand-title-render {
-            margin: 0;
+        .card-badge-render {
+            display: inline-block;
+        }
+
+        .card-title-render {
             color: var(--primary);
             font-size: 20px;
             font-weight: 700;
+            margin-top: 4px;
+            word-break: break-word;
         }
 
         .qr-area {
             background-color: var(--accent-bg);
-            border: 2px dashed #f48fb1;
             border-radius: 16px;
-            padding: 20px;
+            padding: 16px;
             text-align: center;
-            margin-bottom: 20px;
-            min-height: 240px;
-            display: none;
+            width: 100%;
+            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -254,8 +293,8 @@
             border: 4px solid var(--card-bg);
         }
 
-        .qr-url-preview {
-            margin-top: 14px;
+        .card-footer-render {
+            margin-top: 12px;
             font-size: 13px;
             font-weight: 600;
             color: #c2185b;
@@ -471,6 +510,8 @@
             .seo-intro,
             .tab-container,
             .form-group,
+            .customize-toggle,
+            .customize-panel,
             .button-group,
             .input-actions,
             #tab-scan,
@@ -478,43 +519,43 @@
                 display: none !important;
             }
 
-            .export-header {
-                display: block !important;
-            }
-
             .container {
                 box-shadow: none;
-                border: 2px solid var(--primary);
-                padding: 30px;
+                border: none;
+                padding: 0;
                 width: 100%;
                 max-width: 360px;
+            }
+
+            #qr-card-render {
+                display: flex !important;
+                box-shadow: none;
+                border: 2px solid var(--primary);
+                padding: 24px;
+                width: 100%;
                 border-radius: 20px;
             }
 
-            .brand-title-render {
+            .card-title-render {
                 font-size: 22px;
-                margin-bottom: 15px;
             }
 
             .qr-area {
                 background: none;
                 border: none;
                 padding: 0;
-                margin-bottom: 0;
-                display: flex !important;
             }
 
             .qr-area img {
                 box-shadow: none;
                 border: 2px solid var(--border-color);
-                width: 260px;
+                width: 240px;
                 max-width: 100%;
             }
 
-            .qr-url-preview {
+            .card-footer-render {
                 font-size: 14px;
                 color: #000000;
-                margin-top: 18px;
             }
         }
     </style>
@@ -555,7 +596,7 @@
         <!-- TAB 1: GENERATE QR -->
         <section id="tab-generate" class="tab-content active" role="tabpanel">
             <div class="form-group">
-                <label for="input-text">Masukkan Link / Teks:</label>
+                <label for="input-text">Masukkan Link / Teks QR Code:</label>
                 <div class="input-wrapper">
                     <input 
                         type="text" 
@@ -571,16 +612,39 @@
                 </div>
             </div>
 
+            <!-- Accordion Edit Tampilan Kartu -->
+            <button type="button" class="customize-toggle" onclick="toggleCustomizePanel()">
+                <span>✏️ Edit Info Kartu / Nama Toko</span>
+                <span id="customize-arrow">▼</span>
+            </button>
+
+            <div id="customize-panel" class="customize-panel">
+                <div class="form-group">
+                    <label for="input-card-badge">Badge Atas (Contoh: INSTANT QR TOOLS / NAMA SUB):</label>
+                    <input type="text" id="input-card-badge" value="INSTANT QR TOOLS" oninput="updateCardPreview()">
+                </div>
+                <div class="form-group">
+                    <label for="input-card-title">Judul / Nama Toko:</label>
+                    <input type="text" id="input-card-title" value="konverterQR Khresmupu" oninput="updateCardPreview()">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="input-card-footer">Catatan Bawah / Footer:</label>
+                    <input type="text" id="input-card-footer" placeholder="Default: Otomatis sesuai teks QR" oninput="updateCardPreview()">
+                </div>
+            </div>
+
+            <!-- Tampilan Kartu QR Berhasil Dibuat -->
             <div id="qr-card-render">
-                <div class="export-header">
-                    <span class="brand-badge">Instant QR Tools</span>
-                    <h2 class="brand-title-render">konverterQR Khresmupu</h2>
+                <div class="card-header-render">
+                    <span id="card-badge-target" class="brand-badge card-badge-render">INSTANT QR TOOLS</span>
+                    <h2 id="card-title-target" class="card-title-render">konverterQR Khresmupu</h2>
                 </div>
 
-                <div id="qr-area" class="qr-area">
+                <div class="qr-area">
                     <img id="qr-img" src="" crossorigin="anonymous" alt="QR Code Output">
-                    <div id="qr-preview" class="qr-url-preview"></div>
                 </div>
+
+                <div id="card-footer-target" class="card-footer-render"></div>
             </div>
 
             <div id="export-buttons" class="button-group">
@@ -629,6 +693,7 @@
         <h2>Fitur Utama</h2>
         <ul>
             <li>Membuat QR Code dari link atau teks secara instant.</li>
+            <li>Kustomisasi nama toko, judul, dan catatan kartu sebelum diunduh.</li>
             <li>Memindai QR Code menggunakan kamera perangkat.</li>
             <li>Membaca QR Code dari file gambar.</li>
             <li>Fitur pemotongan (crop) area gambar sebelum diproses.</li>
@@ -676,31 +741,55 @@
             }
         }
 
-        // 2. Generate QR Code
+        // 2. Toggle Panel Kustomisasi Card
+        function toggleCustomizePanel() {
+            const panel = document.getElementById('customize-panel');
+            const arrow = document.getElementById('customize-arrow');
+            if (panel.classList.contains('show')) {
+                panel.classList.remove('show');
+                arrow.innerText = '▼';
+            } else {
+                panel.classList.add('show');
+                arrow.innerText = '▲';
+            }
+        }
+
+        // 3. Update Preview Kartu Real-time
+        function updateCardPreview() {
+            const badgeVal = document.getElementById('input-card-badge').value.trim();
+            const titleVal = document.getElementById('input-card-title').value.trim();
+            const footerInput = document.getElementById('input-card-footer').value.trim();
+            const qrInputVal = document.getElementById('input-text').value.trim();
+
+            document.getElementById('card-badge-target').innerText = badgeVal || 'INSTANT QR TOOLS';
+            document.getElementById('card-title-target').innerText = titleVal || 'konverterQR Khresmupu';
+            document.getElementById('card-footer-target').innerText = footerInput || qrInputVal;
+        }
+
+        // 4. Generate QR Code
         function generateQR() {
             const inputVal = document.getElementById('input-text').value.trim();
-            const qrArea = document.getElementById('qr-area');
+            const qrCardRender = document.getElementById('qr-card-render');
             const qrImg = document.getElementById('qr-img');
-            const qrPreview = document.getElementById('qr-preview');
             const exportBtns = document.getElementById('export-buttons');
 
             if (!inputVal) {
-                qrArea.style.display = "none";
+                qrCardRender.style.display = "none";
                 exportBtns.style.display = "none";
                 qrImg.src = "";
-                qrPreview.innerText = "";
                 currentQRUrl = "";
                 return;
             }
 
             currentQRUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(inputVal)}`;
             qrImg.src = currentQRUrl;
-            qrArea.style.display = "flex";
+            qrCardRender.style.display = "flex";
             exportBtns.style.display = "grid";
-            qrPreview.innerText = inputVal;
+
+            updateCardPreview();
         }
 
-        // 3. Paste Clipboard
+        // 5. Paste Clipboard
         async function pasteText() {
             try {
                 const text = await navigator.clipboard.readText();
@@ -711,13 +800,16 @@
             }
         }
 
-        // 4. Reset Form
+        // 6. Reset Form
         function resetForm() {
             document.getElementById('input-text').value = "";
+            document.getElementById('input-card-badge').value = "INSTANT QR TOOLS";
+            document.getElementById('input-card-title').value = "konverterQR Khresmupu";
+            document.getElementById('input-card-footer').value = "";
             generateQR();
         }
 
-        // 5. File Name Generator
+        // 7. File Name Generator
         function generateFileName(input) {
             let cleanText = input.replace(/^https?:\/\//i, '').replace(/[\/\\?%*:|"<>]/g, '-').trim();
             if (cleanText.length > 30) cleanText = cleanText.substring(0, 30);
@@ -729,21 +821,18 @@
             return `${cleanText || 'QR_Code'}_${timestamp}.png`;
         }
 
-        // 6. Download PNG Card
+        // 8. Download PNG Card
         function downloadPNGCard() {
             const inputVal = document.getElementById('input-text').value.trim();
             if (!inputVal) return;
 
             const cardElement = document.getElementById('qr-card-render');
-            cardElement.classList.add('is-exporting');
 
             html2canvas(cardElement, {
                 useCORS: true,
                 scale: 2,
                 backgroundColor: "#ffffff"
             }).then(canvas => {
-                cardElement.classList.remove('is-exporting');
-
                 const image = canvas.toDataURL("image/png");
                 const fileName = generateFileName(inputVal);
 
@@ -754,12 +843,11 @@
                 link.click();
                 document.body.removeChild(link);
             }).catch(() => {
-                cardElement.classList.remove('is-exporting');
                 alert("Terjadi kesalahan saat mengunduh gambar PNG.");
             });
         }
 
-        // 7. Crop & Scan Processing
+        // 9. Crop & Scan Processing
         function initCropImage(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -803,7 +891,7 @@
             });
         }
 
-        // 8. Camera Toggle
+        // 10. Camera Toggle
         function toggleCamera() {
             const readerDiv = document.getElementById('reader');
             const btnCam = document.getElementById('btn-camera');
@@ -847,7 +935,7 @@
             }
         }
 
-        // 9. Display Scan Result
+        // 11. Display Scan Result
         function displayScanResult(text, mode) {
             const resultBox = document.getElementById('scan-result');
             const resultText = document.getElementById('scan-result-text');
@@ -899,7 +987,7 @@
             if (cropper) cropper.destroy();
         }
 
-        // 10. URL Parameter Data Parsing
+        // 12. URL Parameter Data Parsing
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const externalData = urlParams.get('data') || urlParams.get('text') || urlParams.get('link');
