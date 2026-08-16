@@ -328,9 +328,9 @@
             min-height: 280px;
         }
 
-        /* Elements inside rendered card */
+        /* Badge Instant QR Tools Dihilangkan */
         .card-custom-badge {
-            margin-bottom: 8px;
+            display: none !important;
         }
 
         .card-custom-title {
@@ -384,6 +384,7 @@
             border-top: 1px dashed var(--border-color);
             padding-top: 8px;
             width: 100%;
+            display: block !important;
         }
 
         /* Buttons Grid */
@@ -597,16 +598,26 @@
             }
         }
 
-        /* Print Media Styles */
+        /* Perbaikan Cetak PDF (Menghilangkan Halaman Ke-2 Kosong) */
+        @page {
+            margin: 0;
+            size: auto;
+        }
+
         @media print {
+            html, body {
+                height: auto;
+                min-height: 0 !important;
+                background: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                overflow: hidden;
+            }
+
             body {
-                background: none;
-                padding: 0;
-                margin: 0;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 100vh;
             }
 
             .header-section,
@@ -621,18 +632,20 @@
             }
 
             .container {
-                box-shadow: none;
-                border: none;
-                padding: 0;
-                width: 100%;
-                max-width: 360px;
-                min-height: auto;
+                box-shadow: none !important;
+                border: none !important;
+                padding: 20px !important;
+                width: 100% !important;
+                max-width: 400px !important;
+                min-height: auto !important;
+                margin: auto !important;
             }
 
             #qr-card-render {
                 border: 2px solid var(--primary);
-                padding: 24px;
+                padding: 20px;
                 border-radius: 20px;
+                page-break-inside: avoid;
             }
 
             .qr-area {
@@ -646,7 +659,7 @@
             .qr-area img {
                 box-shadow: none;
                 border: 2px solid var(--border-color);
-                width: 240px;
+                width: 220px;
                 max-width: 100%;
             }
 
@@ -718,7 +731,6 @@
                 <div class="qr-card-column">
                     <div id="qr-card-render">
                         <div id="qr-area" class="qr-area">
-                            <span id="render-badge" class="brand-badge card-custom-badge">INSTANT QR TOOLS</span>
                             <h2 id="render-title" class="card-custom-title">konverterQR Khresmupu</h2>
                             <p id="render-subtitle" class="card-custom-subtitle" style="display: none;"></p>
                             
@@ -753,10 +765,6 @@
                             <div class="checkbox-group">
                                 <input type="checkbox" id="toggle-url-preview" checked onchange="updateCardPreview()">
                                 <label for="toggle-url-preview">Tampilkan Teks Link / Isi QR</label>
-                            </div>
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="toggle-brand-footer" checked onchange="updateCardPreview()">
-                                <label for="toggle-brand-footer">Tampilkan Nama Website (konverterQR Khresmupu)</label>
                             </div>
                         </div>
 
@@ -893,13 +901,11 @@
             const customSubtitle = document.getElementById('edit-subtitle').value.trim();
             const customFooter = document.getElementById('edit-footer').value.trim();
             const showUrl = document.getElementById('toggle-url-preview').checked;
-            const showBrand = document.getElementById('toggle-brand-footer').checked;
 
             const renderTitle = document.getElementById('render-title');
             const renderSubtitle = document.getElementById('render-subtitle');
             const renderPreview = document.getElementById('qr-preview');
             const renderFooter = document.getElementById('render-footer');
-            const renderBrand = document.getElementById('render-website-brand');
 
             // Set Judul (Default ke nama website jika kosong)
             renderTitle.innerText = customTitle !== "" ? customTitle : "konverterQR Khresmupu";
@@ -927,13 +933,6 @@
             } else {
                 renderFooter.style.display = "none";
             }
-
-            // Set Branding Website Footer
-            if (showBrand) {
-                renderBrand.style.display = "block";
-            } else {
-                renderBrand.style.display = "none";
-            }
         }
 
         // 4. Paste Clipboard
@@ -954,7 +953,6 @@
             document.getElementById('edit-subtitle').value = "";
             document.getElementById('edit-footer').value = "";
             document.getElementById('toggle-url-preview').checked = true;
-            document.getElementById('toggle-brand-footer').checked = true;
             generateQR();
         }
 
