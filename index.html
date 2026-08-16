@@ -1,199 +1,1154 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QR Code Converter Card</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="43ujvjixIp3CSea-qgEmuA0TVBsEQveTsdsb-GbOh_A" />
 
-    body {
-      background-color: #f4f6f9;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      min-height: 100vh;
-    }
+    <!-- Metadata SEO -->
+    <title>konverterQR Khresmupu - Generator & Konverter QR Code Instant</title>
+    <meta name="description" content="konverterQR Khresmupu adalah aplikasi pembuat & pemindai QR Code instant serba pink secara gratis untuk konversi link, teks, scan kamera/file, dan cetak PDF/PNG.">
+    <meta name="keywords" content="konverterQR Khresmupu, generator QR code, konverter QR, scan QR code, buat QR code pink, QR code instant, buat QR code bisnis">
+    <meta name="author" content="Khresmupu">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://konverterqr-khresmupu.netlify.app/">
 
-    /* Container Card Utama bergaya Hero Section */
-    .hero-card {
-      width: 100%;
-      max-width: 1100px;
-      /* Min-height seperti Hero Section */
-      min-height: 80vh; 
-      background: #ffffff;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      display: flex;
-      flex-direction: row; /* Berdampingan di Desktop */
-      overflow: hidden;
-      align-items: center;
-      padding: 40px;
-      gap: 40px;
-    }
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="KasKeuanganKhresmupu.png">
+    <link rel="apple-touch-icon" href="KasKeuanganKhresmupu.png">
 
-    /* Bagian Kiri: Form Input */
-    .form-section {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      width: 100%;
-    }
+    <!-- Open Graph -->
+    <meta property="og:title" content="konverterQR Khresmupu - Generator & Pemindai QR Code Instant">
+    <meta property="og:description" content="Ubah teks/link jadi QR Code cantik serba pink, unduh PNG/PDF, atau scan QR via kamera dan unggah file!">
+    <meta property="og:image" content="https://konverterqr-khresmupu.netlify.app/KasKeuanganKhresmupu.png">
+    <meta property="og:url" content="https://konverterqr-khresmupu.netlify.app/">
+    <meta property="og:type" content="website">
 
-    .form-section h2 {
-      font-size: 1.8rem;
-      margin-bottom: 10px;
-      color: #333;
-    }
+    <!-- Fonts & External Libraries -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
-    .form-section p {
-      color: #666;
-      margin-bottom: 24px;
-      font-size: 0.95rem;
-    }
+    <style>
+        :root {
+            --bg-color: #fce4ec;
+            --card-bg: #ffffff;
+            --primary: #d81b60;
+            --primary-hover: #ad1457;
+            --secondary: #ec407a;
+            --accent-bg: #fff0f5;
+            --border-color: #f8bbd0;
+            --text-dark: #4a148c;
+            --text-muted: #880e4f;
+            --shadow-color: rgba(233, 30, 99, 0.12);
+        }
 
-    .input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+        }
 
-    .input-group input, 
-    .input-group select, 
-    .input-group textarea {
-      width: 100%;
-      padding: 14px 16px;
-      border: 1px solid #e0e0e0;
-      border-radius: 10px;
-      font-size: 1rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-    .input-group input:focus {
-      border-color: #4f46e5;
-    }
+        /* Container Bergaya Hero Section */
+        .container {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 32px;
+            width: 100%;
+            max-width: 920px;
+            min-height: 80vh;
+            box-shadow: 0 16px 40px var(--shadow-color);
+            border: 2px solid var(--border-color);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
 
-    .btn-submit {
-      padding: 14px 20px;
-      background-color: #4f46e5;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
+        .header-section {
+            margin-bottom: 20px;
+        }
 
-    .btn-submit:hover {
-      background-color: #4338ca;
-    }
+        .brand-badge {
+            background-color: var(--border-color);
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-    /* Bagian Kanan: Foto QR & Detail Isi */
-    .qr-section {
-      flex: 1;
-      background-color: #f8fafc;
-      border: 1px dashed #cbd5e1;
-      border-radius: 16px;
-      padding: 30px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      width: 100%;
-      height: 100%;
-    }
+        .main-title {
+            color: var(--primary);
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
 
-    .qr-image-wrapper {
-      background: white;
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      margin-bottom: 20px;
-    }
+        .seo-intro {
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-    .qr-image-wrapper img {
-      width: 180px;
-      height: 180px;
-      display: block;
-      object-fit: contain;
-    }
+        /* Tab Navigation */
+        .tab-container {
+            display: flex;
+            background-color: var(--border-color);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 22px;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-    .qr-details {
-      width: 100%;
-      max-width: 320px;
-    }
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 13px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
 
-    .qr-details h3 {
-      font-size: 1.1rem;
-      color: #1e293b;
-      margin-bottom: 8px;
-    }
+        .tab-btn.active {
+            background-color: var(--card-bg);
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
 
-    .qr-details p {
-      font-size: 0.9rem;
-      color: #64748b;
-      word-break: break-all; /* Agar URL panjang tidak merusak layout */
-      background: #ffffff;
-      padding: 10px 14px;
-      border-radius: 8px;
-      border: 1px solid #e2e8f0;
-    }
+        .tab-content {
+            display: none;
+            flex: 1;
+        }
 
-    /* RESPONSIVE LAYOUT (Mobile / HP) */
-    @media (max-width: 768px) {
-      .hero-card {
-        flex-direction: column; /* Mengubah jadi atas-bawah */
-        min-height: auto; /* Disesuaikan agar isi di HP tidak terpotong */
-        padding: 24px;
-        gap: 30px;
-      }
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+        }
 
-      .form-section, 
-      .qr-section {
-        width: 100%;
-      }
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary-hover);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.2s ease;
+            color: var(--text-dark);
+            background-color: #fff8fa;
+        }
+
+        #input-text {
+            padding-right: 145px;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--secondary);
+            background-color: var(--card-bg);
+            box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.15);
+        }
+
+        .input-actions {
+            position: absolute;
+            right: 6px;
+            display: flex;
+            gap: 4px;
+        }
+
+        .btn-action {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 7px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-action:hover {
+            background-color: var(--primary);
+        }
+
+        .btn-reset {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-reset:hover {
+            background-color: var(--text-muted);
+        }
+
+        /* Layout 2 Kolom (Side-by-side di Desktop, Atas-Bawah di HP) */
+        .generator-result-wrapper {
+            display: none;
+            gap: 20px;
+            margin-top: 10px;
+            align-items: flex-start;
+            flex: 1;
+        }
+
+        .qr-card-column {
+            flex: 1;
+            width: 100%;
+        }
+
+        .form-edit-column {
+            flex: 1;
+            width: 100%;
+        }
+
+        /* Form Edit Opsional */
+        .edit-card-form {
+            background-color: var(--accent-bg);
+            border: 1px dashed var(--secondary);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: left;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .edit-card-form h3 {
+            font-size: 14px;
+            color: var(--primary);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .edit-card-form .form-item {
+            margin-bottom: 12px;
+        }
+
+        .edit-card-form label {
+            font-size: 10px;
+            margin-bottom: 4px;
+        }
+
+        .edit-card-form input[type="text"] {
+            padding: 9px 12px;
+            font-size: 12px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            font-size: 11px;
+            cursor: pointer;
+            text-transform: none;
+            color: var(--text-dark);
+        }
+
+        /* QR Display Area & Printable Card */
+        #qr-card-render {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 6px;
+        }
+
+        .qr-area {
+            background-color: var(--accent-bg);
+            border: 2px dashed #f48fb1;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 280px;
+        }
+
+        /* Elements inside rendered card */
+        .card-custom-badge {
+            margin-bottom: 8px;
+        }
+
+        .card-custom-title {
+            color: var(--primary);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            word-break: break-word;
+        }
+
+        .card-custom-subtitle {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 14px;
+            word-break: break-word;
+        }
+
+        .qr-area img {
+            max-width: 190px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(216, 27, 96, 0.15);
+            border: 4px solid var(--card-bg);
+        }
+
+        .qr-url-preview {
+            margin-top: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #c2185b;
+            word-break: break-all;
+            max-width: 100%;
+        }
+
+        .card-custom-footer {
+            margin-top: 10px;
+            font-size: 11px;
+            color: var(--text-dark);
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .card-website-brand {
+            margin-top: 12px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 8px;
+            width: 100%;
+        }
+
+        /* Buttons Grid */
+        .button-group {
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(233, 30, 99, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+
+        .btn-png {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-png:hover {
+            background-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .btn-pdf {
+            background-color: #c2185b;
+            color: white;
+        }
+
+        .btn-pdf:hover {
+            background-color: var(--text-muted);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: #f48fb1;
+            color: var(--text-muted);
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f06292;
+            color: white;
+        }
+
+        /* Scanner Styles */
+        #reader {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+            background: var(--accent-bg);
+        }
+
+        .scan-wrapper {
+            max-width: 480px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .file-input-wrapper {
+            margin-bottom: 15px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            display: block;
+            padding: 14px;
+            background-color: var(--accent-bg);
+            color: #c2185b;
+            border: 2px dashed #f48fb1;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .file-label:hover {
+            background-color: var(--border-color);
+        }
+
+        .crop-container {
+            display: none;
+            margin-top: 15px;
+            background: var(--accent-bg);
+            padding: 12px;
+            border-radius: 12px;
+            border: 2px dashed #f48fb1;
+        }
+
+        .crop-img-wrapper {
+            max-height: 300px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .crop-img-wrapper img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .scan-result-box {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            text-align: left;
+            word-break: break-all;
+            display: none;
+        }
+
+        .scan-result-box h4 {
+            margin: 0 0 6px 0;
+            color: var(--primary-hover);
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .scan-result-box p {
+            margin: 0 0 12px 0;
+            font-size: 13px;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .scan-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .scan-actions .btn-action {
+            flex: 1;
+            padding: 8px 10px;
+            text-align: center;
+        }
+
+        /* SEO Section */
+        .seo-content {
+            width: 100%;
+            max-width: 920px;
+            margin: 24px auto 0;
+            padding: 24px;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(233, 30, 99, 0.05);
+            text-align: left;
+        }
+
+        .seo-content h2 {
+            margin: 0 0 8px;
+            color: var(--primary-hover);
+            font-size: 18px;
+        }
+
+        .seo-content h2:not(:first-child) {
+            margin-top: 22px;
+        }
+
+        .seo-content p,
+        .seo-content li {
+            color: var(--text-dark);
+            font-size: 13px;
+            line-height: 1.75;
+        }
+
+        .seo-content ul {
+            margin: 8px 0 0;
+            padding-left: 22px;
+        }
+
+        /* Responsive Breakpoints (Responsif untuk HP) */
+        @media (max-width: 768px) {
+            .container {
+                min-height: auto;
+                padding: 20px;
+                border-radius: 18px;
+            }
+
+            .generator-result-wrapper {
+                flex-direction: column;
+            }
+
+            .seo-content {
+                padding: 18px;
+            }
+
+            .seo-content h2 {
+                font-size: 16px;
+            }
+        }
+
+        /* Print Media Styles */
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+
+            .header-section,
+            .tab-container,
+            .form-group,
+            .form-edit-column,
+            .button-group,
+            .input-actions,
+            #tab-scan,
+            .seo-content {
+                display: none !important;
+            }
+
+            .container {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                width: 100%;
+                max-width: 360px;
+                min-height: auto;
+            }
+
+            #qr-card-render {
+                border: 2px solid var(--primary);
+                padding: 24px;
+                border-radius: 20px;
+            }
+
+            .qr-area {
+                background: none;
+                border: none;
+                padding: 0;
+                margin-bottom: 0;
+                display: flex !important;
+            }
+
+            .qr-area img {
+                box-shadow: none;
+                border: 2px solid var(--border-color);
+                width: 240px;
+                max-width: 100%;
+            }
+
+            .qr-url-preview {
+                font-size: 12px;
+                color: #000000;
+            }
+        }
+    </style>
+
+    <!-- Structured Data JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "konverterQR Khresmupu",
+        "url": "https://konverterqr-khresmupu.netlify.app/",
+        "description": "Aplikasi QR Code online gratis untuk membuat dan memindai QR Code dari teks, link, kamera, atau gambar.",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Web Browser",
+        "author": {
+            "@type": "Person",
+            "name": "Khresmupu"
+        }
     }
-  </style>
+    </script>
 </head>
 <body>
 
-  <!-- Card Utama Berukuran Hero -->
-  <div class="hero-card">
-    
-    <!-- Bagian Kiri: Form Konversi -->
-    <div class="form-section">
-      <h2>Konversi QR & Link</h2>
-      <p>Masukan URL atau unggah gambar QR Code untuk melakukan konversi.</p>
+    <main class="container">
+        <!-- Hero Header -->
+        <div class="header-section">
+            <span class="brand-badge">Instant QR Tools</span>
+            <h1 class="main-title">konverterQR Khresmupu</h1>
+            <p class="seo-intro">
+                Aplikasi QR Code online gratis untuk membuat QR Code dari link/teks, memindai via kamera atau file, serta mengunduh hasil kustomisasi dalam format PNG atau PDF.
+            </p>
 
-      <form class="input-group" onsubmit="event.preventDefault();">
-        <input type="text" placeholder="Masukkan Link / URL di sini..." required />
-        <button type="submit" class="btn-submit">Generate QR Code</button>
-      </form>
-    </div>
+            <!-- Navigation Tabs -->
+            <div class="tab-container" role="tablist">
+                <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab('generate')">✨ Buat QR</button>
+                <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('scan')">🔍 Scan QR</button>
+            </div>
+        </div>
 
-    <!-- Bagian Kanan: Preview Foto QR & Detail Isinya -->
-    <div class="qr-section">
-      <div class="qr-image-wrapper">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://example.com" alt="QR Code Preview" />
-      </div>
-      
-      <div class="qr-details">
-        <h3>Hasil Konversi</h3>
-        <p>https://example.com</p>
-      </div>
-    </div>
+        <!-- TAB 1: GENERATE QR -->
+        <section id="tab-generate" class="tab-content active" role="tabpanel">
+            <div class="form-group">
+                <label for="input-text">Masukkan Link / Teks Utama:</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="input-text" 
+                        placeholder="Ketik atau tempel link..."
+                        oninput="generateQR()"
+                        autocomplete="off"
+                    >
+                    <div class="input-actions">
+                        <button type="button" class="btn-action" onclick="pasteText()">📋 Paste</button>
+                        <button type="button" class="btn-action btn-reset" onclick="resetForm()">🔄 Reset</button>
+                    </div>
+                </div>
+            </div>
 
-  </div>
+            <!-- Wrapper Layout 2 Kolom Samping-Sampingan (Desktop) / Atas-Bawah (HP) -->
+            <div id="generator-result-wrapper" class="generator-result-wrapper">
+                
+                <!-- KOLOM KIRI: Preview Kartu QR -->
+                <div class="qr-card-column">
+                    <div id="qr-card-render">
+                        <div id="qr-area" class="qr-area">
+                            <span id="render-badge" class="brand-badge card-custom-badge">INSTANT QR TOOLS</span>
+                            <h2 id="render-title" class="card-custom-title">konverterQR Khresmupu</h2>
+                            <p id="render-subtitle" class="card-custom-subtitle" style="display: none;"></p>
+                            
+                            <img id="qr-img" src="" crossorigin="anonymous" alt="QR Code Output">
+                            
+                            <div id="qr-preview" class="qr-url-preview"></div>
+                            <p id="render-footer" class="card-custom-footer" style="display: none;"></p>
+                            
+                            <div id="render-website-brand" class="card-website-brand">konverterQR Khresmupu</div>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- KOLOM KANAN: Form Edit Opsional -->
+                <div class="form-edit-column">
+                    <div id="edit-card-form" class="edit-card-form">
+                        <div>
+                            <h3>✏️ Kustomisasi Kartu QR</h3>
+                            <div class="form-item">
+                                <label for="edit-title">Judul / Nama Toko:</label>
+                                <input type="text" id="edit-title" placeholder="Contoh: Toko Berkah Jaya" oninput="updateCardPreview()">
+                            </div>
+                            <div class="form-item">
+                                <label for="edit-subtitle">Sub-Judul / Deskripsi:</label>
+                                <input type="text" id="edit-subtitle" placeholder="Contoh: Scan untuk Pembayaran QRIS" oninput="updateCardPreview()">
+                            </div>
+                            <div class="form-item">
+                                <label for="edit-footer">Catatan Bawah / Pesan:</label>
+                                <input type="text" id="edit-footer" placeholder="Contoh: Terima Kasih Atas Kunjungan Anda!" oninput="updateCardPreview()">
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="toggle-url-preview" checked onchange="updateCardPreview()">
+                                <label for="toggle-url-preview">Tampilkan Teks Link / Isi QR</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="toggle-brand-footer" checked onchange="updateCardPreview()">
+                                <label for="toggle-brand-footer">Tampilkan Nama Website (konverterQR Khresmupu)</label>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div id="export-buttons" class="button-group">
+                            <button type="button" class="btn btn-png" onclick="downloadPNGCard()">🖼️ Unduh PNG</button>
+                            <button type="button" class="btn btn-pdf" onclick="window.print()">📄 Unduh PDF</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 2: SCAN QR -->
+        <section id="tab-scan" class="tab-content" role="tabpanel">
+            <div class="scan-wrapper">
+                <div id="upload-wrapper" class="file-input-wrapper">
+                    <label for="qr-file-input" class="file-label">📁 Upload Gambar QR Code</label>
+                    <input type="file" id="qr-file-input" accept="image/*" onchange="initCropImage(event)">
+                </div>
+
+                <div id="crop-container" class="crop-container">
+                    <div class="crop-img-wrapper">
+                        <img id="image-to-crop" src="" alt="Gambar untuk Crop">
+                    </div>
+                    <button type="button" class="btn btn-png" onclick="processCroppedImage()">✂️ Crop & Scan QR</button>
+                </div>
+
+                <button id="btn-camera" type="button" class="btn btn-secondary" onclick="toggleCamera()">📷 Buka Kamera Scan</button>
+
+                <div id="reader" style="margin-top: 15px; display: none;"></div>
+
+                <div id="scan-result" class="scan-result-box">
+                    <h4>Hasil Scan:</h4>
+                    <p id="scan-result-text"></p>
+                    <div class="scan-actions">
+                        <button type="button" class="btn-action" onclick="copyScanResult()">📋 Salin</button>
+                        <a id="btn-open-url" href="#" target="_blank" rel="noopener noreferrer" class="btn-action" style="display: none; background-color: #2e7d32;">🌐 Buka Link</a>
+                        <button type="button" class="btn-action btn-reset" onclick="resetScanUI()">🔄 Reset</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Content SEO -->
+    <article class="seo-content" aria-label="Informasi konverterQR Khresmupu">
+        <h2>Generator dan Scanner QR Code Online</h2>
+        <p>
+            Gunakan konverterQR Khresmupu untuk membuat QR Code dengan cepat dari teks atau link. QR Code yang dibuat dapat diunduh sebagai PNG atau dicetak menjadi PDF.
+        </p>
+
+        <h2>Fitur Utama</h2>
+        <ul>
+            <li>Membuat QR Code dari link atau teks secara instant.</li>
+            <li>Kustomisasi judul toko, deskripsi, dan catatan pada kartu QR.</li>
+            <li>Memindai QR Code menggunakan kamera perangkat.</li>
+            <li>Membaca QR Code dari file gambar.</li>
+            <li>Fitur pemotongan (crop) area gambar sebelum diproses.</li>
+            <li>Mengunduh hasil dalam format PNG beresolusi tinggi.</li>
+            <li>Fitur cetak ramah dokumen (PDF).</li>
+        </ul>
+
+        <h2>Cara Menggunakan</h2>
+        <p>
+            Masukkan link atau teks pada kolom generator untuk membuat QR Code. Untuk membaca QR Code, pilih tab <strong>Scan QR</strong> lalu gunakan kamera atau unggah gambar QR Code dari galeri Anda.
+        </p>
+
+        <h2>Tentang konverterQR Khresmupu</h2>
+        <p>
+            konverterQR Khresmupu merupakan web tool gratis yang dirancang untuk bekerja langsung melalui browser tanpa instalasi aplikasi tambahan.
+        </p>
+    </article>
+
+    <script>
+        let currentQRUrl = "";
+        let html5QrCode = null;
+        let isCameraActive = false;
+        let cropper = null;
+
+        // 1. Switch Tab
+        function switchTab(tab) {
+            const buttons = document.querySelectorAll('.tab-btn');
+            const contents = document.querySelectorAll('.tab-content');
+
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-selected', 'false');
+            });
+            contents.forEach(content => content.classList.remove('active'));
+
+            if (tab === 'generate') {
+                buttons[0].classList.add('active');
+                buttons[0].setAttribute('aria-selected', 'true');
+                document.getElementById('tab-generate').classList.add('active');
+                stopCamera();
+            } else {
+                buttons[1].classList.add('active');
+                buttons[1].setAttribute('aria-selected', 'true');
+                document.getElementById('tab-scan').classList.add('active');
+            }
+        }
+
+        // 2. Generate QR Code
+        function generateQR() {
+            const inputVal = document.getElementById('input-text').value.trim();
+            const resultWrapper = document.getElementById('generator-result-wrapper');
+            const qrImg = document.getElementById('qr-img');
+            const exportBtns = document.getElementById('export-buttons');
+
+            if (!inputVal) {
+                resultWrapper.style.display = "none";
+                exportBtns.style.display = "none";
+                qrImg.src = "";
+                currentQRUrl = "";
+                return;
+            }
+
+            currentQRUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(inputVal)}`;
+            qrImg.src = currentQRUrl;
+            
+            resultWrapper.style.display = "flex";
+            exportBtns.style.display = "grid";
+
+            updateCardPreview();
+        }
+
+        // 3. Update Preview Kartu QR dari Form Kustomisasi
+        function updateCardPreview() {
+            const inputVal = document.getElementById('input-text').value.trim();
+            
+            const customTitle = document.getElementById('edit-title').value.trim();
+            const customSubtitle = document.getElementById('edit-subtitle').value.trim();
+            const customFooter = document.getElementById('edit-footer').value.trim();
+            const showUrl = document.getElementById('toggle-url-preview').checked;
+            const showBrand = document.getElementById('toggle-brand-footer').checked;
+
+            const renderTitle = document.getElementById('render-title');
+            const renderSubtitle = document.getElementById('render-subtitle');
+            const renderPreview = document.getElementById('qr-preview');
+            const renderFooter = document.getElementById('render-footer');
+            const renderBrand = document.getElementById('render-website-brand');
+
+            // Set Judul (Default ke nama website jika kosong)
+            renderTitle.innerText = customTitle !== "" ? customTitle : "konverterQR Khresmupu";
+
+            // Set Subtitle
+            if (customSubtitle !== "") {
+                renderSubtitle.innerText = customSubtitle;
+                renderSubtitle.style.display = "block";
+            } else {
+                renderSubtitle.style.display = "none";
+            }
+
+            // Set Preview URL
+            if (showUrl && inputVal !== "") {
+                renderPreview.innerText = inputVal;
+                renderPreview.style.display = "block";
+            } else {
+                renderPreview.style.display = "none";
+            }
+
+            // Set Footer Kustom
+            if (customFooter !== "") {
+                renderFooter.innerText = customFooter;
+                renderFooter.style.display = "block";
+            } else {
+                renderFooter.style.display = "none";
+            }
+
+            // Set Branding Website Footer
+            if (showBrand) {
+                renderBrand.style.display = "block";
+            } else {
+                renderBrand.style.display = "none";
+            }
+        }
+
+        // 4. Paste Clipboard
+        async function pasteText() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('input-text').value = text;
+                generateQR();
+            } catch (err) {
+                alert('Gagal membaca clipboard. Izinkan akses clipboard pada pengaturan browser Anda.');
+            }
+        }
+
+        // 5. Reset Form
+        function resetForm() {
+            document.getElementById('input-text').value = "";
+            document.getElementById('edit-title').value = "";
+            document.getElementById('edit-subtitle').value = "";
+            document.getElementById('edit-footer').value = "";
+            document.getElementById('toggle-url-preview').checked = true;
+            document.getElementById('toggle-brand-footer').checked = true;
+            generateQR();
+        }
+
+        // 6. File Name Generator
+        function generateFileName(input) {
+            const customTitle = document.getElementById('edit-title').value.trim();
+            let baseName = customTitle !== "" ? customTitle : input.replace(/^https?:\/\//i, '');
+            let cleanText = baseName.replace(/[\/\\?%*:|"<>]/g, '-').trim();
+            if (cleanText.length > 30) cleanText = cleanText.substring(0, 30);
+
+            const now = new Date();
+            const pad = (n) => String(n).padStart(2, '0');
+            const timestamp = `${pad(now.getDate())}-${pad(now.getMonth() + 1)}-${now.getFullYear()}_${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
+
+            return `${cleanText || 'QR_Code'}_${timestamp}.png`;
+        }
+
+        // 7. Download PNG Card
+        function downloadPNGCard() {
+            const inputVal = document.getElementById('input-text').value.trim();
+            if (!inputVal) return;
+
+            const cardElement = document.getElementById('qr-card-render');
+
+            html2canvas(cardElement, {
+                useCORS: true,
+                scale: 2,
+                backgroundColor: "#ffffff"
+            }).then(canvas => {
+                const image = canvas.toDataURL("image/png");
+                const fileName = generateFileName(inputVal);
+
+                const link = document.createElement('a');
+                link.href = image;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }).catch(() => {
+                alert("Terjadi kesalahan saat mengunduh gambar PNG.");
+            });
+        }
+
+        // 8. Crop & Scan Processing
+        function initCropImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const cropImg = document.getElementById('image-to-crop');
+                cropImg.src = e.target.result;
+                document.getElementById('crop-container').style.display = 'block';
+
+                if (cropper) cropper.destroy();
+
+                cropper = new Cropper(cropImg, {
+                    viewMode: 1,
+                    autoCropArea: 0.8,
+                    responsive: true
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function processCroppedImage() {
+            if (!cropper) return;
+
+            const canvas = cropper.getCroppedCanvas();
+            canvas.toBlob((blob) => {
+                const croppedFile = new File([blob], "cropped_qr.png", { type: "image/png" });
+
+                if (!html5QrCode) {
+                    html5QrCode = new Html5Qrcode("reader");
+                }
+
+                html5QrCode.scanFile(croppedFile, true)
+                    .then(qrCodeMessage => {
+                        displayScanResult(qrCodeMessage, 'upload');
+                        document.getElementById('crop-container').style.display = 'none';
+                    })
+                    .catch(() => {
+                        alert("QR Code tidak dapat terdeteksi. Silakan sesuaikan kembali area crop.");
+                    });
+            });
+        }
+
+        // 9. Camera Toggle
+        function toggleCamera() {
+            const readerDiv = document.getElementById('reader');
+            const btnCam = document.getElementById('btn-camera');
+            const uploadWrapper = document.getElementById('upload-wrapper');
+
+            if (isCameraActive) {
+                stopCamera();
+            } else {
+                document.getElementById('crop-container').style.display = 'none';
+                uploadWrapper.style.display = 'none';
+                readerDiv.style.display = "block";
+                btnCam.innerText = "🛑 Tutup Kamera";
+                isCameraActive = true;
+
+                if (!html5QrCode) {
+                    html5QrCode = new Html5Qrcode("reader");
+                }
+
+                html5QrCode.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: { width: 220, height: 220 } },
+                    (decodedText) => {
+                        displayScanResult(decodedText, 'camera');
+                        stopCamera();
+                    },
+                    () => {}
+                ).catch(() => {
+                    alert("Akses kamera ditolak atau perangkat tidak mendukung.");
+                    resetScanUI();
+                });
+            }
+        }
+
+        function stopCamera() {
+            if (html5QrCode && isCameraActive) {
+                html5QrCode.stop().then(() => {
+                    document.getElementById('reader').style.display = "none";
+                    document.getElementById('btn-camera').innerText = "📷 Buka Kamera Scan";
+                    isCameraActive = false;
+                }).catch(err => console.error(err));
+            }
+        }
+
+        // 10. Display Scan Result
+        function displayScanResult(text, mode) {
+            const resultBox = document.getElementById('scan-result');
+            const resultText = document.getElementById('scan-result-text');
+            const btnOpenUrl = document.getElementById('btn-open-url');
+            const btnCamera = document.getElementById('btn-camera');
+            const uploadWrapper = document.getElementById('upload-wrapper');
+
+            resultText.innerText = text;
+            resultBox.style.display = "block";
+
+            if (isValidURL(text)) {
+                const formattedUrl = text.startsWith('http://') || text.startsWith('https://') ? text : 'https://' + text;
+                btnOpenUrl.href = formattedUrl;
+                btnOpenUrl.style.display = "inline-block";
+            } else {
+                btnOpenUrl.style.display = "none";
+            }
+
+            if (mode === 'upload') {
+                btnCamera.style.display = 'none';
+            } else if (mode === 'camera') {
+                uploadWrapper.style.display = 'none';
+            }
+        }
+
+        function isValidURL(string) {
+            try {
+                const url = new URL(string.startsWith('http') ? string : 'https://' + string);
+                return url.hostname.includes('.');
+            } catch {
+                return false;
+            }
+        }
+
+        function copyScanResult() {
+            const text = document.getElementById('scan-result-text').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Hasil scan berhasil disalin ke clipboard!");
+            });
+        }
+
+        function resetScanUI() {
+            stopCamera();
+            document.getElementById('scan-result').style.display = "none";
+            document.getElementById('crop-container').style.display = "none";
+            document.getElementById('upload-wrapper').style.display = "block";
+            document.getElementById('btn-camera').style.display = "flex";
+            document.getElementById('qr-file-input').value = "";
+            if (cropper) cropper.destroy();
+        }
+
+        // 11. URL Parameter Data Parsing
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const externalData = urlParams.get('data') || urlParams.get('text') || urlParams.get('link');
+
+            if (externalData) {
+                document.getElementById('input-text').value = externalData;
+            }
+
+            generateQR();
+        });
+    </script>
 </body>
 </html>
