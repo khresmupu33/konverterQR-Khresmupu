@@ -65,7 +65,6 @@
             padding: 20px;
         }
 
-        /* Container Bergaya Hero Section */
         .container {
             background: var(--card-bg);
             border-radius: 24px;
@@ -115,7 +114,6 @@
             margin-right: auto;
         }
 
-        /* Tab Navigation */
         .tab-container {
             display: flex;
             background-color: var(--border-color);
@@ -156,7 +154,6 @@
             flex-direction: column;
         }
 
-        /* Form Elements */
         .form-group {
             margin-bottom: 20px;
             text-align: left;
@@ -231,7 +228,6 @@
             background-color: var(--text-muted);
         }
 
-        /* Layout 2 Kolom (Side-by-side di Desktop, Atas-Bawah di HP) */
         .generator-result-wrapper {
             display: none;
             gap: 20px;
@@ -250,7 +246,6 @@
             width: 100%;
         }
 
-        /* Form Edit Opsional */
         .edit-card-form {
             background-color: var(--accent-bg);
             border: 1px dashed var(--secondary);
@@ -308,7 +303,6 @@
             color: var(--text-dark);
         }
 
-        /* QR Display Area & Printable Card */
         #qr-card-render {
             background: var(--card-bg);
             border-radius: 16px;
@@ -328,11 +322,11 @@
             min-height: 280px;
         }
 
-        /* Badge Instant QR Tools Dihilangkan */
         .card-custom-badge {
             display: none !important;
         }
 
+        /* Styling teks placeholder visual pada kartu */
         .card-custom-title {
             color: var(--primary);
             font-size: 18px;
@@ -347,6 +341,11 @@
             font-weight: 500;
             margin-bottom: 14px;
             word-break: break-word;
+        }
+
+        .is-placeholder {
+            opacity: 0.55;
+            font-style: italic;
         }
 
         .qr-area img {
@@ -387,7 +386,6 @@
             display: block !important;
         }
 
-        /* Buttons Grid */
         .button-group {
             display: none;
             grid-template-columns: 1fr 1fr;
@@ -443,7 +441,6 @@
             color: white;
         }
 
-        /* Scanner Styles */
         #reader {
             width: 100%;
             max-width: 480px;
@@ -542,7 +539,6 @@
             text-align: center;
         }
 
-        /* SEO Section */
         .seo-content {
             width: 100%;
             max-width: 920px;
@@ -577,7 +573,6 @@
             padding-left: 22px;
         }
 
-        /* Responsive Breakpoints (Responsif untuk HP) */
         @media (max-width: 768px) {
             .container {
                 min-height: auto;
@@ -598,7 +593,6 @@
             }
         }
 
-        /* Perbaikan Cetak PDF (Menghilangkan Halaman Ke-2 Kosong) */
         @page {
             margin: 0;
             size: auto;
@@ -667,10 +661,13 @@
                 font-size: 12px;
                 color: #000000;
             }
+
+            .is-placeholder {
+                display: none !important;
+            }
         }
     </style>
 
-    <!-- Structured Data JSON-LD -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -698,7 +695,6 @@
                 Aplikasi QR Code online gratis untuk membuat QR Code dari link/teks, memindai via kamera atau file, serta mengunduh hasil kustomisasi dalam format PNG atau PDF.
             </p>
 
-            <!-- Navigation Tabs -->
             <div class="tab-container" role="tablist">
                 <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab('generate')">✨ Buat QR</button>
                 <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('scan')">🔍 Scan QR</button>
@@ -724,21 +720,28 @@
                 </div>
             </div>
 
-            <!-- Wrapper Layout 2 Kolom Samping-Sampingan (Desktop) / Atas-Bawah (HP) -->
             <div id="generator-result-wrapper" class="generator-result-wrapper">
                 
-                <!-- KOLOM KIRI: Preview Kartu QR -->
+                <!-- KOLOM KIRI: Preview Kartu QR dengan Petunjuk Letak Teks -->
                 <div class="qr-card-column">
                     <div id="qr-card-render">
                         <div id="qr-area" class="qr-area">
+                            <!-- Judul / Nama Tempat -->
                             <h2 id="render-title" class="card-custom-title">konverterQR Khresmupu</h2>
-                            <p id="render-subtitle" class="card-custom-subtitle" style="display: none;"></p>
                             
+                            <!-- Sub-Judul -->
+                            <p id="render-subtitle" class="card-custom-subtitle is-placeholder">[ Posisi Sub-Judul ]</p>
+                            
+                            <!-- QR Image -->
                             <img id="qr-img" src="" crossorigin="anonymous" alt="QR Code Output">
                             
+                            <!-- Link Preview -->
                             <div id="qr-preview" class="qr-url-preview"></div>
-                            <p id="render-footer" class="card-custom-footer" style="display: none;"></p>
                             
+                            <!-- Deskripsi / Catatan Bawah -->
+                            <p id="render-footer" class="card-custom-footer is-placeholder">[ Posisi Deskripsi / Catatan Bawah ]</p>
+                            
+                            <!-- Branding Website -->
                             <div id="render-website-brand" class="card-website-brand">konverterQR Khresmupu</div>
                         </div>
                     </div>
@@ -749,17 +752,20 @@
                     <div id="edit-card-form" class="edit-card-form">
                         <div>
                             <h3>✏️ Kustomisasi Kartu QR</h3>
+                            
                             <div class="form-item">
-                                <label for="edit-title">Judul / Nama Toko:</label>
-                                <input type="text" id="edit-title" placeholder="Contoh: Toko Berkah Jaya" oninput="updateCardPreview()">
+                                <label for="edit-title">📍 Judul / Nama Tempat / Toko:</label>
+                                <input type="text" id="edit-title" placeholder="Contoh: Toko Berkah Jaya / Cabang Bandung" oninput="updateCardPreview()">
                             </div>
+
                             <div class="form-item">
-                                <label for="edit-subtitle">Sub-Judul / Deskripsi:</label>
+                                <label for="edit-subtitle">🏷️ Sub-Judul / Keterangan Singkat:</label>
                                 <input type="text" id="edit-subtitle" placeholder="Contoh: Scan untuk Pembayaran QRIS" oninput="updateCardPreview()">
                             </div>
+
                             <div class="form-item">
-                                <label for="edit-footer">Catatan Bawah / Pesan:</label>
-                                <input type="text" id="edit-footer" placeholder="Contoh: Terima Kasih Atas Kunjungan Anda!" oninput="updateCardPreview()">
+                                <label for="edit-footer">📝 Deskripsi / Catatan Bawah:</label>
+                                <input type="text" id="edit-footer" placeholder="Contoh: Buka Setiap Hari 08:00 - 21:00 WIB" oninput="updateCardPreview()">
                             </div>
                             
                             <div class="checkbox-group">
@@ -821,7 +827,7 @@
         <h2>Fitur Utama</h2>
         <ul>
             <li>Membuat QR Code dari link atau teks secara instant.</li>
-            <li>Kustomisasi judul toko, deskripsi, dan catatan pada kartu QR.</li>
+            <li>Kustomisasi judul tempat/toko, sub-judul, dan deskripsi catatan pada kartu QR.</li>
             <li>Memindai QR Code menggunakan kamera perangkat.</li>
             <li>Membaca QR Code dari file gambar.</li>
             <li>Fitur pemotongan (crop) area gambar sebelum diproses.</li>
@@ -846,7 +852,6 @@
         let isCameraActive = false;
         let cropper = null;
 
-        // 1. Switch Tab
         function switchTab(tab) {
             const buttons = document.querySelectorAll('.tab-btn');
             const contents = document.querySelectorAll('.tab-content');
@@ -869,7 +874,6 @@
             }
         }
 
-        // 2. Generate QR Code
         function generateQR() {
             const inputVal = document.getElementById('input-text').value.trim();
             const resultWrapper = document.getElementById('generator-result-wrapper');
@@ -893,7 +897,7 @@
             updateCardPreview();
         }
 
-        // 3. Update Preview Kartu QR dari Form Kustomisasi
+        // Update Kartu Preview beserta Placeholder Visual
         function updateCardPreview() {
             const inputVal = document.getElementById('input-text').value.trim();
             
@@ -907,18 +911,27 @@
             const renderPreview = document.getElementById('qr-preview');
             const renderFooter = document.getElementById('render-footer');
 
-            // Set Judul (Default ke nama website jika kosong)
-            renderTitle.innerText = customTitle !== "" ? customTitle : "konverterQR Khresmupu";
-
-            // Set Subtitle
-            if (customSubtitle !== "") {
-                renderSubtitle.innerText = customSubtitle;
-                renderSubtitle.style.display = "block";
+            // Judul / Tempat
+            if (customTitle !== "") {
+                renderTitle.innerText = customTitle;
+                renderTitle.classList.remove('is-placeholder');
             } else {
-                renderSubtitle.style.display = "none";
+                renderTitle.innerText = "konverterQR Khresmupu";
+                renderTitle.classList.remove('is-placeholder');
             }
 
-            // Set Preview URL
+            // Sub-Judul
+            if (customSubtitle !== "") {
+                renderSubtitle.innerText = customSubtitle;
+                renderSubtitle.classList.remove('is-placeholder');
+                renderSubtitle.style.display = "block";
+            } else {
+                renderSubtitle.innerText = "[ Posisi Sub-Judul ]";
+                renderSubtitle.classList.add('is-placeholder');
+                renderSubtitle.style.display = "block";
+            }
+
+            // Preview URL
             if (showUrl && inputVal !== "") {
                 renderPreview.innerText = inputVal;
                 renderPreview.style.display = "block";
@@ -926,16 +939,18 @@
                 renderPreview.style.display = "none";
             }
 
-            // Set Footer Kustom
+            // Deskripsi / Catatan Bawah
             if (customFooter !== "") {
                 renderFooter.innerText = customFooter;
+                renderFooter.classList.remove('is-placeholder');
                 renderFooter.style.display = "block";
             } else {
-                renderFooter.style.display = "none";
+                renderFooter.innerText = "[ Posisi Deskripsi / Catatan Bawah ]";
+                renderFooter.classList.add('is-placeholder');
+                renderFooter.style.display = "block";
             }
         }
 
-        // 4. Paste Clipboard
         async function pasteText() {
             try {
                 const text = await navigator.clipboard.readText();
@@ -946,7 +961,6 @@
             }
         }
 
-        // 5. Reset Form
         function resetForm() {
             document.getElementById('input-text').value = "";
             document.getElementById('edit-title').value = "";
@@ -956,7 +970,6 @@
             generateQR();
         }
 
-        // 6. File Name Generator
         function generateFileName(input) {
             const customTitle = document.getElementById('edit-title').value.trim();
             let baseName = customTitle !== "" ? customTitle : input.replace(/^https?:\/\//i, '');
@@ -970,10 +983,20 @@
             return `${cleanText || 'QR_Code'}_${timestamp}.png`;
         }
 
-        // 7. Download PNG Card
+        // Hapus teks placeholder sebelum di-render ke PNG agar unduhan bersih
         function downloadPNGCard() {
             const inputVal = document.getElementById('input-text').value.trim();
             if (!inputVal) return;
+
+            const renderSubtitle = document.getElementById('render-subtitle');
+            const renderFooter = document.getElementById('render-footer');
+
+            // Simpan status sementara
+            const subIsPlaceholder = renderSubtitle.classList.contains('is-placeholder');
+            const footIsPlaceholder = renderFooter.classList.contains('is-placeholder');
+
+            if (subIsPlaceholder) renderSubtitle.style.display = "none";
+            if (footIsPlaceholder) renderFooter.style.display = "none";
 
             const cardElement = document.getElementById('qr-card-render');
 
@@ -991,12 +1014,17 @@
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+
+                // Kembalikan tampilan semula
+                if (subIsPlaceholder) renderSubtitle.style.display = "block";
+                if (footIsPlaceholder) renderFooter.style.display = "block";
             }).catch(() => {
+                if (subIsPlaceholder) renderSubtitle.style.display = "block";
+                if (footIsPlaceholder) renderFooter.style.display = "block";
                 alert("Terjadi kesalahan saat mengunduh gambar PNG.");
             });
         }
 
-        // 8. Crop & Scan Processing
         function initCropImage(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1040,7 +1068,6 @@
             });
         }
 
-        // 9. Camera Toggle
         function toggleCamera() {
             const readerDiv = document.getElementById('reader');
             const btnCam = document.getElementById('btn-camera');
@@ -1084,7 +1111,6 @@
             }
         }
 
-        // 10. Display Scan Result
         function displayScanResult(text, mode) {
             const resultBox = document.getElementById('scan-result');
             const resultText = document.getElementById('scan-result-text');
@@ -1136,7 +1162,6 @@
             if (cropper) cropper.destroy();
         }
 
-        // 11. URL Parameter Data Parsing
         window.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const externalData = urlParams.get('data') || urlParams.get('text') || urlParams.get('link');
