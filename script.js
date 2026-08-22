@@ -16,6 +16,31 @@ function showToast(message) {
     }, 3000);
 }
 
+// Dark & Light Mode Toggle
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    const icon = document.getElementById('theme-icon');
+    if (icon) {
+        icon.innerText = newTheme === 'dark' ? '☀️' : '🌙';
+    }
+    
+    showToast(`Beralih ke Mode ${newTheme === 'dark' ? 'Gelap' : 'Terang'}`);
+}
+
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const icon = document.getElementById('theme-icon');
+    if (icon) {
+        icon.innerText = savedTheme === 'dark' ? '☀️' : '🌙';
+    }
+}
+
 // Switch main tabs (Dua tab utama: Buat QR & Scan QR)
 function switchTab(tab) {
     const buttons = document.querySelectorAll('.tab-container .tab-btn');
@@ -27,7 +52,6 @@ function switchTab(tab) {
     });
     contents.forEach(content => content.classList.remove('active'));
 
-    // Otomatis reset input/form dan QR saat berpindah tab utama
     resetForm();
 
     if (tab === 'generate') {
@@ -42,7 +66,7 @@ function switchTab(tab) {
     }
 }
 
-// Switch sub-type (Link, WiFi, vCard, WhatsApp) dengan fitur AUTO RESET OTOMATIS
+// Switch sub-type (Link, WiFi, vCard, WhatsApp)
 function switchQrType(type) {
     activeQrType = type;
     const buttons = document.querySelectorAll('.type-btn');
@@ -51,15 +75,12 @@ function switchQrType(type) {
     buttons.forEach(btn => btn.classList.remove('active'));
     forms.forEach(form => form.classList.remove('active'));
 
-    // Temukan tombol yang sesuai dengan tipe
     const targetBtn = Array.from(buttons).find(b => b.getAttribute('onclick').includes(`'${type}'`));
     if (targetBtn) targetBtn.classList.add('active');
     
     document.getElementById(`form-type-${type}`).classList.add('active');
 
-    // MERE-SET SEMUA INPUT & WARNA OTOMATIS SETIAP GANTI KE FITUR LAIN
     resetFormSilently();
-
     showToast(`Beralih ke mode: ${type.toUpperCase()}`);
 }
 
@@ -130,7 +151,6 @@ function generateQR() {
     generateQRFromText(inputVal);
 }
 
-// Update fungsi generateQRFromText[cite: 2]
 function generateQRFromText(textVal) {
     const resultWrapper = document.getElementById('generator-result-wrapper');
     const qrImg = document.getElementById('qr-img');
@@ -146,13 +166,10 @@ function generateQRFromText(textVal) {
     resultWrapper.style.display = "flex";
     exportBtns.style.display = "grid";
 
-    // TAMPILKAN TOMBOL ADVANCED SAAT QR BERHASIL DIBUAT
     setAdvancedToggleVisibility(true);
-
     updateCardPreview();
 }
 
-// Update fungsi hideResultWrapper[cite: 2]
 function hideResultWrapper() {
     const resultWrapper = document.getElementById('generator-result-wrapper');
     const exportBtns = document.getElementById('export-buttons');
@@ -163,7 +180,6 @@ function hideResultWrapper() {
     qrImg.src = "";
     currentQRUrl = "";
 
-    // SEMBUNYIKAN TOMBOL ADVANCED SAAT QR KOSONG
     setAdvancedToggleVisibility(false);
 }
 
@@ -232,9 +248,7 @@ async function pasteText() {
     }
 }
 
-// Reset Silent tanpa Notifikasi
 function resetFormSilently() {
-    // Reset ketersediaan input teks/tautan
     const inputIds = [
         'input-text', 'wifi-ssid', 'wifi-password', 
         'vcard-name', 'vcard-phone', 'vcard-email', 'vcard-company', 
@@ -245,7 +259,6 @@ function resetFormSilently() {
         if (el) el.value = "";
     });
 
-    // Reset warna dan pengaturan tingkat lanjut ke default
     document.getElementById('qr-color-dark').value = "#d81b60";
     document.getElementById('qr-color-light').value = "#ffffff";
     document.getElementById('qr-size-select').value = "300x300";
@@ -465,20 +478,6 @@ function toggleAccordion(btn) {
     }
 }
 
-// INITIALIZATION
-window.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const externalData = urlParams.get('data') || urlParams.get('text') || urlParams.get('link');
-
-    if (externalData) {
-        document.getElementById('input-text').value = externalData;
-        generateQR();
-    }
-});
-
-
-
-// Tambahkan fungsi pembantu untuk kontrol tampil/sembunyi tombol lanjutan
 function setAdvancedToggleVisibility(visible) {
     const toggleWrapper = document.querySelector('.advanced-toggle-wrapper');
     const panel = document.getElementById('advanced-options');
@@ -488,9 +487,21 @@ function setAdvancedToggleVisibility(visible) {
         toggleWrapper.style.display = visible ? 'block' : 'none';
     }
 
-    // Jika disembunyikan, tutup juga panel opsi lanjutan bila sedang terbuka
     if (!visible && panel) {
         panel.style.display = 'none';
         if (arrow) arrow.innerText = '▼';
     }
 }
+
+// INITIALIZATION
+window.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const externalData = urlParams.get('data') || urlParams.get('text') || urlParams.get('link');
+
+    if (externalData) {
+        document.getElementById('input-text').value = externalData;
+        generateQR();
+    }
+});
