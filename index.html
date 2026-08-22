@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="43ujvjixIp3CSea-qgEmuA0TVBsEQveTsdsb-GbOh_A" />
 
     <!-- Metadata SEO -->
-    <title>konverterQR Khresmupu - Generator & Konverter QR Code Instant Gratis & Lengkap</title>
+    <title>konverterQR Khresmupu - Generator & Pemindai QR Code Instant Gratis</title>
     <meta name="description" content="konverterQR Khresmupu adalah aplikasi pembuat & pemindai QR Code instant serba pink gratis untuk konversi link, teks, WiFi, vCard, WhatsApp, scan kamera/file, kustomisasi warna tingkat lanjut, dan cetak PDF/PNG.">
     <meta name="keywords" content="konverterQR Khresmupu, generator QR code, konverter QR, scan QR code, buat QR code pink, QR code instant, buat QR code bisnis, QR WiFi, QR vCard, QR WhatsApp, generator QR aesthetic, desain QR code custom">
     <meta name="author" content="Khresmupu">
@@ -65,33 +65,61 @@
     <!-- Notification Toast Container -->
     <div id="toast-container" class="toast-container"></div>
 
-    <!-- Global Header Navigation / Branding Banner -->
+    <!-- Global Header Navigation -->
     <header class="top-nav">
         <div class="nav-container">
             <div class="brand-logo">
                 <span class="logo-text">konverterQR <strong>Khresmupu</strong></span>
             </div>
-            <div class="nav-links">
-                <a href="#tab-section" class="nav-item">Fitur Utama</a>
-                <a href="#feature-cards-section" class="nav-item">Keunggulan</a>
-                <a href="#how-it-works" class="nav-item">Cara Pakai</a>
-                <a href="#faq-section" class="nav-item">FAQ</a>
-                <a href="#seo-article" class="nav-item">Panduan</a>
+            <div class="nav-right">
+                <div class="nav-links">
+                    <a href="#tab-section" class="nav-item">Fitur Utama</a>
+                    <a href="#feature-cards-section" class="nav-item">Keunggulan</a>
+                    <a href="#how-it-works" class="nav-item">Cara Pakai</a>
+                    <a href="#faq-section" class="nav-item">FAQ</a>
+                </div>
+                <!-- Dark / Light Mode Switcher -->
+                <button type="button" class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Ubah Mode Gelap / Terang">
+                    <span id="theme-icon">🌙</span>
+                </button>
             </div>
         </div>
     </header>
 
-    <main class="container">
-        <!-- Hero Header -->
-        <div class="header-section">
+    <!-- Hero Section dengan Call to Action -->
+    <section class="hero-section" style="margin-bottom: 50px;">
+        <div class="hero-container" >
             <span class="brand-badge pulse-badge">⚡ Instant & Aesthetic QR Engine</span>
-            <h1 class="main-title">konverterQR Khresmupu</h1>
-            <p class="seo-intro">
-                Platform QR Code serba praktis & gratis. Buat QR Code dari Link, Wi-Fi, Kontak vCard, & WhatsApp dengan kustomisasi warna tingkat lanjut, atau pindai QR dari kamera & file gambar instant!
+            <h1 class="hero-title">Buat & Pindai QR Code Elegan dalam Hitungan Detik</h1>
+            <p class="hero-subtitle">
+                Solusi praktis konversi Link, Wi-Fi, Kontak vCard, dan WhatsApp dengan kustomisasi warna penuh. Bebas biaya, tanpa daftar, dan siap cetak standar PDF/PNG.
             </p>
+            <div class="hero-cta-group">
+                <a href="#tab-section" onclick="switchTab('generate')" class="cta-btn cta-primary">✨ Buat QR Sekarang</a>
+                <a href="#tab-section" onclick="switchTab('scan')" class="cta-btn cta-secondary">🔍 Scan / Pindai QR</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <strong class="stat-num">100%</strong>
+                    <span class="stat-label">Gratis Selamanya</span>
+                </div>
+                <div class="stat-item">
+                    <strong class="stat-num">HD</strong>
+                    <span class="stat-label">Resolusi S/D 800px</span>
+                </div>
+                <div class="stat-item">
+                    <strong class="stat-num">0s</strong>
+                    <span class="stat-label">Proses Instan</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            <!-- Main Tab Container (Hanya Buat QR & Scan QR - Batch QR Dihilangkan) -->
-            <div id="tab-section" class="tab-container" role="tablist">
+    <!-- Main Workspace Container -->
+    <main class="container" id="tab-section">
+        <div class="header-section">
+            <!-- Tab Container Utama -->
+            <div class="tab-container" role="tablist">
                 <button class="tab-btn active" id="btn-tab-generate" role="tab" aria-selected="true" onclick="switchTab('generate')">✨ Buat QR Code</button>
                 <button class="tab-btn" id="btn-tab-scan" role="tab" aria-selected="false" onclick="switchTab('scan')">🔍 Scan / Pindai QR</button>
             </div>
@@ -100,7 +128,7 @@
         <!-- TAB 1: GENERATE QR -->
         <section id="tab-generate" class="tab-content active" role="tabpanel">
             
-            <!-- Type Selector Sub-tabs (Otomatis Mereset Input Saat Berganti) -->
+            <!-- Type Selector Sub-tabs -->
             <div class="qr-type-selector">
                 <button class="type-btn active" onclick="switchQrType('text')">🔗 Link / Teks</button>
                 <button class="type-btn" onclick="switchQrType('wifi')">📶 Wi-Fi Network</button>
@@ -200,12 +228,12 @@
                 </div>
             </div>
 
-            <!-- Advanced Styling Panel Toggle & Options -->
+            <!-- Advanced Panel Toggle -->
             <div class="advanced-toggle-wrapper">
                 <button type="button" class="btn-toggle-advanced" onclick="toggleAdvancedOptions()">🎨 Pengaturan Warna & Tingkat Lanjut <span id="adv-arrow">▼</span></button>
             </div>
 
-            <!-- Advanced Controls (Warna, Preset Palet, Ukuran Resolusi, & Margin) -->
+            <!-- Advanced Controls Panel -->
             <div id="advanced-options" class="advanced-options-panel">
                 <div class="palette-preset-title">🎨 Preset Palet Warna Favorit:</div>
                 <div class="palette-presets">
@@ -240,35 +268,25 @@
 
             <!-- RESULT DISPLAY AREA -->
             <div id="generator-result-wrapper" class="generator-result-wrapper">
-                
-                <!-- KOLOM KIRI: Preview Kartu QR dengan Placeholder Visual -->
+                <!-- Preview Kartu QR -->
                 <div class="qr-card-column">
                     <div id="qr-card-render">
                         <div id="qr-area" class="qr-area">
-                            <!-- Judul / Nama Tempat -->
                             <h2 id="render-title" class="card-custom-title is-placeholder">[ Posisi Judul / Nama Tempat / Toko ]</h2>
-                            
-                            <!-- Sub-Judul -->
                             <p id="render-subtitle" class="card-custom-subtitle is-placeholder">[ Posisi Sub-Judul / Keterangan Promosi ]</p>
                             
-                            <!-- QR Image Container -->
                             <div class="qr-image-wrapper">
                                 <img id="qr-img" src="" crossorigin="anonymous" alt="QR Code Output">
                             </div>
                             
-                            <!-- Link Preview -->
                             <div id="qr-preview" class="qr-url-preview"></div>
-                            
-                            <!-- Deskripsi / Catatan Bawah -->
                             <p id="render-footer" class="card-custom-footer is-placeholder">[ Posisi Deskripsi / Jam Operasional / Catatan Bawah ]</p>
-                            
-                            <!-- Branding Website -->
                             <div id="render-website-brand" class="card-website-brand">konverterQR Khresmupu</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- KOLOM KANAN: Form Edit Opsional & Tombol Ekspor -->
+                <!-- Form Edit Label Kartu -->
                 <div class="form-edit-column">
                     <div id="edit-card-form" class="edit-card-form">
                         <div>
@@ -295,14 +313,12 @@
                             </div>
                         </div>
 
-                        <!-- Action Buttons -->
                         <div id="export-buttons" class="button-group">
                             <button type="button" class="btn btn-png" onclick="downloadPNGCard()">🖼️ Unduh Gambar PNG</button>
                             <button type="button" class="btn btn-pdf" onclick="window.print()">📄 Unduh / Cetak PDF</button>
                         </div>
                     </div>
                 </div>
-
             </div>
         </section>
 
@@ -338,7 +354,7 @@
         </section>
     </main>
 
-    <!-- LANDING PAGE CARDS & FEATURE HIGHLIGHTS (SUPER DUPER MENARIK) -->
+    <!-- LANDING PAGE CARDS & FEATURE HIGHLIGHTS -->
     <section id="feature-cards-section" class="landing-cards-container">
         <div class="section-header text-center">
             <span class="sub-title-badge">Fitur Unggulan KonverterQR</span>
@@ -347,42 +363,31 @@
         </div>
 
         <div class="cards-grid">
-            <!-- Card 1 -->
             <div class="feature-card">
                 <div class="card-icon-box pink-bg">🚀</div>
                 <h3>Super Fast Instant Generator</h3>
                 <p>Konversi otomatis secara instant detik itu juga saat Anda mengetik teks atau menempelkan tautan link URL.</p>
             </div>
-
-            <!-- Card 2 -->
             <div class="feature-card">
                 <div class="card-icon-box purple-bg">📶</div>
                 <h3>Format Lengkap Wi-Fi & Contact</h3>
                 <p>Mendukung format otomatis jaringan Wi-Fi, vCard identitas bisnis, dan tautan otomatis WhatsApp Chat.</p>
             </div>
-
-            <!-- Card 3 -->
             <div class="feature-card">
                 <div class="card-icon-box red-bg">🎨</div>
                 <h3>Kustomisasi Warna & Resolusi</h3>
                 <p>Bebas atur warna pola QR Code, latar belakang, serta ukuran pixel resolusi cetak hingga 800x800 HD.</p>
             </div>
-
-            <!-- Card 4 -->
             <div class="feature-card">
                 <div class="card-icon-box blue-bg">🔍</div>
                 <h3>Scanner Kamera & File Crop</h3>
                 <p>Pindai QR langsung dari webcam kamera HP/Laptop atau unggah gambar dengan pemotong crop presisi tinggi.</p>
             </div>
-
-            <!-- Card 5 -->
             <div class="feature-card">
                 <div class="card-icon-box green-bg">📄</div>
                 <h3>Cetak PDF & Standar Cetak</h3>
                 <p>Ekspor langsung ke gambar PNG berkualitas tinggi atau cetak siap pakai PDF dengan template display toko.</p>
             </div>
-
-            <!-- Card 6 -->
             <div class="feature-card">
                 <div class="card-icon-box orange-bg">🛡️</div>
                 <h3>100% Aman & Bebas Iklan Risih</h3>
@@ -432,7 +437,6 @@
                     <p>Ya, 100% gratis selamanya tanpa batasan penggunaan, tanpa batasan unduhan, dan tanpa registrasi akun.</p>
                 </div>
             </div>
-
             <div class="accordion-item">
                 <button class="accordion-header" onclick="toggleAccordion(this)">
                     Apakah QR Code yang dibuat di sini memiliki masa kadaluarsa?
@@ -442,7 +446,6 @@
                     <p>Tidak ada masa kadaluarsa. QR Code yang dihasilkan bersifat QR Code Statis yang langsung mengodekan data ke dalam pola visual secara permanen.</p>
                 </div>
             </div>
-
             <div class="accordion-item">
                 <button class="accordion-header" onclick="toggleAccordion(this)">
                     Mengapa input dan warna ter-reset setiap kali berpindah opsi/fitur?
@@ -452,7 +455,6 @@
                     <p>Fitur Auto-Reset memastikan tidak ada bentrok data antar tipe input (seperti data Wi-Fi yang terbawa ke Link Teks) sehingga hasil QR Code Anda selalu bersih dan akurat.</p>
                 </div>
             </div>
-
             <div class="accordion-item">
                 <button class="accordion-header" onclick="toggleAccordion(this)">
                     Bagaimana cara mencetak QR Code agar tajam untuk keperluan spanduk/meja?
