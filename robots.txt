@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://konverterqr-khresmupu.netlify.app/sitemap.xml
