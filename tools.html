@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tools QR Code Khresmupu - Buat & Scan QR Code Gratis</title>
+    <meta name="description" content="Gunakan Tools QR Code Khresmupu untuk membuat QR Code dari link, teks, Wi-Fi, vCard, dan WhatsApp. Scan QR melalui kamera atau gambar, kustomisasi warna, dan unduh PNG atau cetak PDF.">
+    <meta name="keywords" content="tools QR code, generator QR code, scan QR code, QR WiFi, QR vCard, QR WhatsApp, QR gratis, Khresmupu">
+    <meta name="author" content="Khresmupu">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <link rel="canonical" href="https://konverterqr-khresmupu.netlify.app/tools.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://konverterqr-khresmupu.netlify.app/tools.html">
+    <meta property="og:title" content="Tools QR Code Khresmupu - Buat & Scan QR Code Gratis">
+    <meta property="og:description" content="Generator dan scanner QR Code gratis dengan dukungan Link, Teks, Wi-Fi, vCard, WhatsApp, kamera, upload gambar, kustomisasi warna, PNG, dan PDF.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Tools QR Code Khresmupu",
+        "url": "https://konverterqr-khresmupu.netlify.app/tools.html",
+        "description": "Tools gratis untuk membuat dan memindai QR Code dari teks, link, Wi-Fi, vCard, WhatsApp, kamera, atau gambar.",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Web Browser, iOS, Android, Windows, macOS",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "IDR"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Khresmupu"
+        }
+    }
+    </script>
+</head>
+<body>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <header class="top-nav">
+        <div class="nav-container">
+            <a href="index.html" class="brand-logo" aria-label="Khresmupu Home">
+                <span class="logo-text">konverterQR <strong>Khresmupu</strong></span>
+            </a>
+
+            <div class="nav-right">
+                <nav class="nav-links" aria-label="Navigasi">
+                    <a href="index.html" class="nav-item">Beranda</a>
+                    <a href="tools.html" class="nav-item active-nav">Tools QR</a>
+                </nav>
+
+                <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Ubah Mode Gelap atau Terang">
+                    <span id="theme-icon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="tool-hero">
+        <div class="tool-hero-inner">
+            <span class="brand-badge pulse-badge">🛠️ QR TOOLKIT</span>
+            <h1>Tools QR Code Khresmupu</h1>
+            <p>Buat QR Code, kustomisasi tampilannya, atau pindai QR Code dari kamera dan gambar dalam satu tempat.</p>
+        </div>
+    </section>
+
+    <main class="container" id="tab-section">
+<div class="header-section">
+<!-- Tab Container Utama -->
+<div class="tab-container" role="tablist">
+<button aria-selected="true" class="tab-btn active" id="btn-tab-generate" onclick="switchTab('generate')" role="tab">✨ Buat QR Code</button>
+<button aria-selected="false" class="tab-btn" id="btn-tab-scan" onclick="switchTab('scan')" role="tab">🔍 Scan / Pindai QR</button>
+</div>
+</div>
+<!-- TAB 1: GENERATE QR -->
+<section class="tab-content active" id="tab-generate" role="tabpanel">
+<!-- Type Selector Sub-tabs -->
+<div class="qr-type-selector">
+<button class="type-btn active" onclick="switchQrType('text')">🔗 Link / Teks</button>
+<button class="type-btn" onclick="switchQrType('wifi')">📶 Wi-Fi Network</button>
+<button class="type-btn" onclick="switchQrType('vcard')">📇 Kontak vCard</button>
+<button class="type-btn" onclick="switchQrType('whatsapp')">💬 WhatsApp Chat</button>
+</div>
+<!-- Form Dynamic Inputs -->
+<div class="form-group" id="qr-input-forms">
+<!-- Text / Link Input -->
+<div class="type-form-block active" id="form-type-text">
+<label for="input-text">Masukkan Link URL atau Teks Utama:</label>
+<div class="input-wrapper">
+<input autocomplete="off" id="input-text" oninput="generateQR()" placeholder="Contoh: https://khresmupu.com atau teks bebas..." type="text"/>
+<div class="input-actions">
+<button class="btn-action" onclick="pasteText()" type="button">📋 Paste</button>
+<button class="btn-action btn-reset" onclick="resetForm()" type="button">🔄 Reset Form</button>
+</div>
+</div>
+</div>
+<!-- WiFi Form -->
+<div class="type-form-block" id="form-type-wifi">
+<div class="grid-form-2">
+<div>
+<label for="wifi-ssid">Nama Network Wi-Fi (SSID):</label>
+<input id="wifi-ssid" oninput="buildSpecialQR('wifi')" placeholder="Contoh: Cafe_Khresmupu_Guest" type="text"/>
+</div>
+<div>
+<label for="wifi-password">Kata Sandi Wi-Fi:</label>
+<input id="wifi-password" oninput="buildSpecialQR('wifi')" placeholder="Masukkan password..." type="text"/>
+</div>
+</div>
+<div class="grid-form-2" style="margin-top: 10px;">
+<div>
+<label for="wifi-type">Tipe Enkripsi Keamanan:</label>
+<select id="wifi-type" onchange="buildSpecialQR('wifi')">
+<option value="WPA">WPA / WPA2 / WPA3 (Standar)</option>
+<option value="WEP">WEP (Lama)</option>
+<option value="nopass">Tanpa Kata Sandi (Jaringan Terbuka)</option>
+</select>
+</div>
+<div class="form-action-align">
+<button class="btn-action btn-reset w-100" onclick="resetForm()" type="button">🔄 Reset Form Wi-Fi</button>
+</div>
+</div>
+</div>
+<!-- vCard Form -->
+<div class="type-form-block" id="form-type-vcard">
+<div class="grid-form-2">
+<div>
+<label for="vcard-name">Nama Lengkap Pemilik:</label>
+<input id="vcard-name" oninput="buildSpecialQR('vcard')" placeholder="Contoh: Ahmad Khresmupu" type="text"/>
+</div>
+<div>
+<label for="vcard-phone">Nomor Telepon / HP:</label>
+<input id="vcard-phone" oninput="buildSpecialQR('vcard')" placeholder="Contoh: +628123456789" type="text"/>
+</div>
+</div>
+<div class="grid-form-2" style="margin-top: 10px;">
+<div>
+<label for="vcard-email">Alamat Email:</label>
+<input id="vcard-email" oninput="buildSpecialQR('vcard')" placeholder="nama@domain.com" type="text"/>
+</div>
+<div>
+<label for="vcard-company">Perusahaan / Organisasi:</label>
+<input id="vcard-company" oninput="buildSpecialQR('vcard')" placeholder="PT Khresmupu Indonesia" type="text"/>
+</div>
+</div>
+<div style="margin-top:10px; text-align:right;">
+<button class="btn-action btn-reset" onclick="resetForm()" type="button">🔄 Reset Form vCard</button>
+</div>
+</div>
+<!-- WhatsApp Form -->
+<div class="type-form-block" id="form-type-whatsapp">
+<div class="grid-form-2">
+<div>
+<label for="wa-number">Nomor WhatsApp (dengan Kode Negara):</label>
+<input id="wa-number" oninput="buildSpecialQR('whatsapp')" placeholder="Contoh: 628123456789" type="text"/>
+</div>
+<div>
+<label for="wa-message">Pesan Otomatis (Opsional):</label>
+<input id="wa-message" oninput="buildSpecialQR('whatsapp')" placeholder="Halo, saya berminat dengan produk Anda..." type="text"/>
+</div>
+</div>
+<div style="margin-top:10px; text-align:right;">
+<button class="btn-action btn-reset" onclick="resetForm()" type="button">🔄 Reset Form WhatsApp</button>
+</div>
+</div>
+</div>
+<!-- Advanced Panel Toggle -->
+<div class="advanced-toggle-wrapper">
+<button class="btn-toggle-advanced" onclick="toggleAdvancedOptions()" type="button">🎨 Pengaturan Warna &amp; Tingkat Lanjut <span id="adv-arrow">▼</span></button>
+</div>
+<!-- Advanced Controls Panel -->
+<div class="advanced-options-panel" id="advanced-options">
+<div class="palette-preset-title">🎨 Preset Palet Warna Favorit:</div>
+<div class="palette-presets">
+<button class="preset-chip chip-pink" onclick="applyColorPreset('#d81b60', '#ffffff')" type="button">🌸 Classic Pink</button>
+<button class="preset-chip chip-dark" onclick="applyColorPreset('#000000', '#ffffff')" type="button">🖤 Monokrom Hitam</button>
+<button class="preset-chip chip-navy" onclick="applyColorPreset('#0d47a1', '#e3f2fd')" type="button">💙 Navy Blue</button>
+<button class="preset-chip chip-emerald" onclick="applyColorPreset('#1b5e20', '#e8f5e9')" type="button">💚 Emerald Green</button>
+<button class="preset-chip chip-purple" onclick="applyColorPreset('#4a148c', '#f3e5f5')" type="button">💜 Royal Purple</button>
+</div>
+<div class="grid-form-3" style="margin-top: 15px;">
+<div>
+<label for="qr-color-dark">Warna Pattern QR Code:</label>
+<input id="qr-color-dark" onchange="generateQR()" type="color" value="#d81b60"/>
+</div>
+<div>
+<label for="qr-color-light">Warna Background QR:</label>
+<input id="qr-color-light" onchange="generateQR()" type="color" value="#ffffff"/>
+</div>
+<div>
+<label for="qr-size-select">Ukuran Resolusi Kertas/Gambar:</label>
+<select id="qr-size-select" onchange="generateQR()">
+<option value="200x200">200 x 200 px (Ringan)</option>
+<option selected="" value="300x300">300 x 300 px (Standar Web)</option>
+<option value="400x400">400 x 400 px (Bagus)</option>
+<option value="500x500">500 x 500 px (Resolusi Tinggi)</option>
+<option value="800x800">800 x 800 px (Cetak Spanduk / HD)</option>
+</select>
+</div>
+</div>
+</div>
+<!-- RESULT DISPLAY AREA -->
+<div class="generator-result-wrapper" id="generator-result-wrapper">
+<!-- Preview Kartu QR -->
+<div class="qr-card-column">
+<div id="qr-card-render">
+<div class="qr-area" id="qr-area">
+<h2 class="card-custom-title is-placeholder" id="render-title">[ Posisi Judul / Nama Tempat / Toko ]</h2>
+<p class="card-custom-subtitle is-placeholder" id="render-subtitle">[ Posisi Sub-Judul / Keterangan Promosi ]</p>
+<div class="qr-image-wrapper">
+<img alt="QR Code Output" crossorigin="anonymous" id="qr-img" src=""/>
+</div>
+<div class="qr-url-preview" id="qr-preview"></div>
+<p class="card-custom-footer is-placeholder" id="render-footer">[ Posisi Deskripsi / Jam Operasional / Catatan Bawah ]</p>
+<div class="card-website-brand" id="render-website-brand">konverterQR Khresmupu</div>
+</div>
+</div>
+</div>
+<!-- Form Edit Label Kartu -->
+<div class="form-edit-column">
+<div class="edit-card-form" id="edit-card-form">
+<div>
+<h3>✏️ Kustomisasi Label Kartu QR</h3>
+<div class="form-item">
+<label for="edit-title">📍 Judul Utama / Nama Tempat / Toko:</label>
+<input id="edit-title" oninput="updateCardPreview()" placeholder="Contoh: Toko Berkah Jaya / Cabang Bandung" type="text"/>
+</div>
+<div class="form-item">
+<label for="edit-subtitle">🏷️ Sub-Judul / Keterangan Singkat:</label>
+<input id="edit-subtitle" oninput="updateCardPreview()" placeholder="Contoh: Scan untuk Pembayaran QRIS / Menu Digital" type="text"/>
+</div>
+<div class="form-item">
+<label for="edit-footer">📝 Deskripsi / Catatan Bawah:</label>
+<input id="edit-footer" oninput="updateCardPreview()" placeholder="Contoh: Buka Setiap Hari 08:00 - 21:00 WIB" type="text"/>
+</div>
+<div class="checkbox-group">
+<input checked="" id="toggle-url-preview" onchange="updateCardPreview()" type="checkbox"/>
+<label for="toggle-url-preview">Tampilkan Teks Link / Isi QR pada Kartu</label>
+</div>
+</div>
+<div class="button-group" id="export-buttons">
+<button class="btn btn-png" onclick="downloadPNGCard()" type="button">🖼️ Unduh Gambar PNG</button>
+<button class="btn btn-pdf" onclick="window.print()" type="button">📄 Unduh / Cetak PDF</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- TAB 2: SCAN QR CODE -->
+<section class="tab-content" id="tab-scan" role="tabpanel">
+<div class="scan-wrapper">
+<div class="file-input-wrapper" id="upload-wrapper">
+<label class="file-label" for="qr-file-input">📁 Upload Gambar QR Code dari Perangkat Anda</label>
+<input accept="image/*" id="qr-file-input" onchange="initCropImage(event)" type="file"/>
+</div>
+<div class="crop-container" id="crop-container">
+<div class="crop-img-wrapper">
+<img alt="Gambar untuk Crop" id="image-to-crop" src=""/>
+</div>
+<button class="btn btn-png" onclick="processCroppedImage()" type="button">✂️ Crop &amp; Scan Area Terpilih</button>
+</div>
+<button class="btn btn-secondary" id="btn-camera" onclick="toggleCamera()" type="button">📷 Buka Kamera Live Pemindai</button>
+<div id="reader" style="margin-top: 15px; display: none;"></div>
+<div class="scan-result-box" id="scan-result">
+<h4>🎉 Hasil Pemindaian QR Code:</h4>
+<p id="scan-result-text"></p>
+<div class="scan-actions">
+<button class="btn-action" onclick="copyScanResult()" type="button">📋 Salin Teks</button>
+<a class="btn-action" href="#" id="btn-open-url" rel="noopener noreferrer" style="display: none; background-color: #2e7d32;" target="_blank">🌐 Buka Tautan Tautan</a>
+<button class="btn-action btn-reset" onclick="resetScanUI()" type="button">🔄 Pindai QR Lain</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+    <footer class="site-footer">
+        <div class="footer-shell">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">
+                        <span class="footer-logo-mark">QR</span>
+                        <span>konverterQR <strong>Khresmupu</strong></span>
+                    </a>
+                    <p>Generator dan scanner QR Code yang cepat, gratis, dan mudah digunakan untuk kebutuhan sehari-hari.</p>
+                    <span class="footer-badge">✦ Gratis &bull; Cepat &bull; Tanpa ribet</span>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Menu</h4>
+                    <a href="index.html">Beranda</a>
+                    <a href="index.html#fitur">Fitur</a>
+                    <a href="index.html#cara-pakai">Cara Pakai</a>
+                    <a href="index.html#faq">FAQ</a>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Tools</h4>
+                    <a href="tools.html">Generator QR</a>
+                    <a href="tools.html">Scanner QR</a>
+                    <a href="tools.html">QR Wi-Fi</a>
+                    <a href="tools.html">QR vCard</a>
+                </div>
+
+                <div class="footer-column footer-contact">
+                    <h4>Khresmupu</h4>
+                    <p>Solusi QR sederhana untuk berbagi informasi dengan lebih praktis.</p>
+                    <a href="tools.html" class="footer-tool-link">Buka Tools QR <span>→</span></a>
+                </div>
+            </div>
+
+            <div class="footer-divider"></div>
+
+            <div class="footer-bottom-row">
+                <p>&copy; 2026 <strong>konverterQR Khresmupu</strong>. All Rights Reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="index.html">Beranda</a>
+                    <span aria-hidden="true">•</span>
+                    <a href="tools.html">Tools QR</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
