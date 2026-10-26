@@ -1,0 +1,78 @@
+/* ==========================================================================
+   tokens.css — satu-satunya tempat untuk mengubah warna, radius, bayangan.
+   Tema gelap/terang diatur lewat atribut <html data-theme="light|dark">.
+   ========================================================================== */
+
+:root {
+    --font: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    /* Surface */
+    --bg: #fff5f8;
+    --bg-alt: #ffeaf1;
+    --surface: #ffffff;
+    --surface-2: #fff9fb;
+    --border: #f6cfdd;
+    --border-strong: #eab0c6;
+
+    /* Text */
+    --text: #2d1020;
+    --text-muted: #7a4a62;
+
+    /* Brand */
+    --accent: #d81b60;          /* teks/ikon aksen */
+    --accent-strong: #ad1457;
+    --accent-soft: #fde4ee;
+    --btn-bg: #d81b60;          /* latar tombol utama (kontras dengan teks putih) */
+    --btn-bg-hover: #ad1457;
+    --on-accent: #ffffff;
+
+    /* Status */
+    --ok: #1b7a3d;
+    --ok-soft: #e5f5ea;
+    --warn: #8a5200;
+    --warn-soft: #fff3dc;
+    --danger: #b3261e;
+
+    /* Efek */
+    --shadow-sm: 0 1px 2px rgba(120, 20, 60, .06), 0 2px 8px rgba(120, 20, 60, .06);
+    --shadow-md: 0 10px 30px rgba(120, 20, 60, .12);
+    --ring: 0 0 0 3px rgba(216, 27, 96, .35);
+
+    /* Bentuk & ukuran */
+    --radius-sm: 10px;
+    --radius: 16px;
+    --radius-lg: 24px;
+    --radius-pill: 999px;
+    --header-h: 64px;
+    --container: 1120px;
+
+    color-scheme: light;
+}
+
+[data-theme="dark"] {
+    --bg: #170710;
+    --bg-alt: #1f0a16;
+    --surface: #251019;
+    --surface-2: #2d1521;
+    --border: #4a2037;
+    --border-strong: #6a2f4f;
+
+    --text: #fbe9f0;
+    --text-muted: #d9a3bc;
+
+    --accent: #ff6b9b;
+    --accent-strong: #ff9abd;
+    --accent-soft: #3a1829;
+
+    --ok: #6fd18f;
+    --ok-soft: #12301d;
+    --warn: #f2b45c;
+    --warn-soft: #33250c;
+    --danger: #ff8a80;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .35), 0 2px 8px rgba(0, 0, 0, .3);
+    --shadow-md: 0 10px 30px rgba(0, 0, 0, .45);
+    --ring: 0 0 0 3px rgba(255, 107, 155, .45);
+
+    color-scheme: dark;
+}

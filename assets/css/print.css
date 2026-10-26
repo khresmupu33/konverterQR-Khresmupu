@@ -1,0 +1,48 @@
+/* ==========================================================================
+   print.css — saat "Cetak / Simpan PDF", hanya kartu QR yang dicetak.
+   Dimuat dengan media="print" sehingga tidak membebani render layar.
+   ========================================================================== */
+
+@page { margin: 14mm; }
+
+html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    min-height: 0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+.no-print,
+.skip-link,
+.site-header,
+.site-footer,
+.toast-container,
+.tool-hero,
+.tabs,
+.ws-form,
+.ws-custom,
+.export-row,
+.preview-note,
+.tool-info,
+#panel-scan,
+.is-placeholder,
+.qr-empty {
+    display: none !important;
+}
+
+main, .tool-shell, .container { padding: 0 !important; max-width: none !important; }
+
+.workspace { display: block !important; }
+.ws-preview > h2 { display: none !important; }
+.ws-preview { position: static !important; padding: 0 !important; border: 0 !important; box-shadow: none !important; background: none !important; }
+
+.qr-card {
+    margin: 0 auto;
+    max-width: 380px;
+    border: 2px solid #d81b60 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+.qr-frame { --qr-size: 260px; }

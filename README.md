@@ -1,44 +1,76 @@
-# 📱 konverterQR Khresmupu
+# konverterQR Khresmupu
 
-**konverterQR Khresmupu** adalah aplikasi pembuat (generator) dan pemindai (scanner) QR Code berbasis web *all-in-one* yang cepat, efisien, dan tampil estetis dengan tema warna serba *pink*. Aplikasi ini dirancang *responsive* agar nyaman digunakan baik di perangkat seluler (HP) maupun desktop.
+Generator dan scanner QR Code gratis (Link/Teks, Wi-Fi, vCard, WhatsApp). Situs statis: HTML, CSS, dan JavaScript murni tanpa build step.
 
----
-
-## ✨ Fitur Utama
-
-### 1. 🎨 Generator QR Code Instant
-* **Real-time Generation:** QR Code langsung terbentuk secara otomatis saat Anda mengetik atau menempel (*paste*) teks/link.
-* **Fitur Clipboard Fast-Paste:** Salin link lalu tekan tombol **📋 Paste** untuk mempercepat input.
-* **URL Parameter Integration:** Mendukung pemuatan data awal via URL query string (contoh: `?data=https://example.com`, `?text=...`, atau `?link=...`).
-
-### 2. 📥 Ekspor & Cetak Mudah
-* **Unduh PNG Otomatis:** Menyimpan kartu QR Code sebagai gambar PNG lengkap dengan sistem penamaan file otomatis berdasarkan teks input dan stempel waktu (*timestamp*).
-* **Unduh/Cetak PDF:** Tampilan khusus *Print Media Query* CSS yang dikustomisasi sehingga siap dicetak atau disimpan ke PDF dengan rapi tanpa elemen tombol/UI yang mengganggu.
-
-### 3. 🔍 Pemindai (Scanner) QR Code
-* **Scan via Kamera:** Mendukung pemindaian langsung menggunakan kamera bawaan perangkat (kamera belakang/environment).
-* **Upload File & Crop Image:** Unggah gambar QR Code dari galeri dan gunakan fitur **Crop** bawaan (Cropper.js) untuk memperjelas area QR sebelum dipindai.
-* **Deteksi URL Otomatis:** Menampilkan opsi **🌐 Buka Link** secara otomatis jika hasil pemindaian terdeteksi sebagai URL/link valid.
-* **Salin Hasil Scan:** Menyalin teks/link hasil pemindaian ke clipboard hanya dengan satu klik.
-
----
-
-## 🛠️ Teknologi & Pustaka yang Digunakan
-
-Aplikasi ini dibuat murni menggunakan **HTML5, CSS3, dan JavaScript (Vanilla JS)** tanpa *framework* berat, serta memanfaatkan beberapa pustaka eksternal terpercaya:
-
-* **[Google Fonts (Poppins)](https://fonts.google.com/specimen/Poppins):** Tipografi modern dan bersih.
-* **[QR Server API](https://goqr.me/api/):** Layanan API cepat untuk me-render gambar QR Code.
-* **[html5-qrcode](https://github.com/mebjas/html5-qrcode):** Untuk pemindaian QR Code via kamera dan pembacaan file gambar.
-* **[Cropper.js](https://fengyuanchen.github.io/cropperjs/):** Pustaka interaktif untuk memotong (*crop*) gambar sebelum dipindai.
-* **[html2canvas](https://html2canvas.hertzen.com/):** Konversi elemen DOM/HTML menjadi gambar canvas untuk proses ekspor ke PNG.
-
----
-
-## 📁 Struktur Berkas Repositori
+## Struktur folder
 
 ```text
 .
-├── index.html               # File utama HTML (mengandung CSS & JS terintegrasi)
-├── KasKeuanganKhresmupu.png # Favicon / Icon OpenGraph
-└── README.md                # Dokumentasi proyek
+├── index.html                  # Beranda (landing page + FAQ)
+├── tools.html                  # Tools: Buat QR & Scan QR
+├── integrasi.html              # Dokumentasi: pasang tombol QR di website lain
+├── 404.html                    # Halaman 404 (noindex)
+├── favicon.ico
+├── site.webmanifest            # Metadata PWA / ikon
+├── robots.txt                  # Aturan crawler + lokasi sitemap
+├── sitemap.xml                 # Daftar URL untuk Google
+├── google395259613be6fb9e.html # Verifikasi Google Search Console (jangan dihapus)
+├── _headers                    # Header keamanan & cache (Netlify)
+├── _redirects                  # Redirect (Netlify)
+└── assets/
+    ├── css/
+    │   ├── tokens.css          # Warna, radius, bayangan (tema terang/gelap)
+    │   ├── base.css            # Reset, tipografi, aksesibilitas
+    │   ├── layout.css          # Container, header, footer
+    │   ├── components.css      # Tombol, form, tab, accordion, toast
+    │   ├── pages.css           # Gaya khusus beranda, tools, 404
+    │   └── print.css           # Gaya cetak (hanya kartu QR yang dicetak)
+    ├── js/
+    │   ├── theme-init.js       # Set tema sebelum render (tanpa kilat)
+    │   ├── common.js           # Toast, tema, menu mobile, loader pustaka
+    │   ├── embed.js            # Script publik untuk website LAIN (tombol Buat QR Code)
+    │   ├── integrasi.js        # Builder kode & tombol salin di integrasi.html
+    │   ├── generator.js        # Tab "Buat QR"
+    │   ├── scanner.js          # Tab "Scan QR" (kamera, upload, crop)
+    │   └── tools.js            # Tab utama + routing #scan
+    └── img/                    # Favicon (logo), ikon aplikasi, gambar OG, ilustrasi hero
+```
+
+## Cara mengembangkan
+
+- Ubah warna/tema di `assets/css/tokens.css`.
+- Jalankan lokal dengan server statis, misalnya `python3 -m http.server 8000`, lalu buka `http://localhost:8000`.
+- Setelah mengubah CSS/JS, naikkan angka `?v=5` pada tag `<link>`/`<script>` di setiap HTML agar cache browser diperbarui.
+- Parameter URL di `tools.html`: `?type=wifi|vcard|whatsapp|text`, `?data=<teks>` (alias `url`), `&title=`, `&subtitle=`, `&footer=`, `&color=RRGGBB`, `&bg=RRGGBB`, dan `#scan` untuk membuka tab scan. Parameter yang sama juga bisa ditaruh setelah `#` (mis. `tools.html#data=...&title=...`); bentuk ini dipakai `embed.js` karena tidak hilang oleh redirect hosting.
+
+## Integrasi ke website lain
+
+Website lain cukup menempel dua baris ini (di dalam `<body>`):
+
+```html
+<script src="https://konverterqr-khresmupu.netlify.app/assets/js/embed.js"
+        data-title="Toko Berkah Jaya" data-subtitle="Scan untuk lihat menu" defer></script>
+```
+
+Tombol "Buat QR Code" muncul, dan saat diklik Tools terbuka dengan form terisi. Pengunjung tinggal klik Unduh PNG atau Cetak / PDF. Dokumentasi lengkap, tabel atribut, dan builder kode ada di `integrasi.html`. Tiga cara pemasangan: script otomatis, link biasa, atau tombol buatan sendiri (`data-kqr`).
+
+Catatan: `embed.js` mengambil domain dari alamat file-nya sendiri, sehingga tidak perlu diubah jika domain berpindah. Namun contoh kode statis di `integrasi.html` dan snippet builder memakai domain dari `<link rel="canonical">`.
+
+## SEO
+
+- Domain kanonis: `https://konverterqr-khresmupu.netlify.app`. Jika domain berubah, ganti di `index.html`, `tools.html`, `sitemap.xml`, `robots.txt`, dan `site.webmanifest`.
+- Setiap halaman memiliki title, description, canonical, Open Graph, Twitter Card, dan JSON-LD (WebSite, FAQPage, WebApplication, BreadcrumbList).
+- Setelah deploy: kirim `sitemap.xml` di Google Search Console, lalu minta pengindeksan untuk `/` dan `/tools.html`.
+
+## Pustaka eksternal (dimuat hanya saat dibutuhkan)
+
+| Pustaka | Fungsi | Dimuat saat |
+|---|---|---|
+| QR Server API | Merender gambar QR | QR dibuat |
+| html2canvas 1.4.1 | Ekspor kartu ke PNG | Klik Unduh PNG |
+| html5-qrcode 2.3.8 | Scan kamera / gambar | Membuka kamera atau mengunggah gambar |
+| Cropper.js 1.5.13 | Crop gambar QR | Scan otomatis gagal |
+
+## Gambar QR
+
+Ilustrasi hero (`qr-illustration.svg`), gambar OG (`og-image.png`), dan ikon aplikasi (`icon-192/512`, `icon-maskable-512`, `apple-touch-icon`) berisi QR Code asli yang mengarah ke `https://portofolio-khresmupu.netlify.app/` dan sudah diuji bisa dipindai. Favicon kecil (`favicon.svg`, `favicon-32.png`, `favicon.ico`) memakai logo sederhana karena QR tidak terbaca pada ukuran 16-32 px.
